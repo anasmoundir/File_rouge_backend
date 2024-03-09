@@ -10,9 +10,6 @@ public class Resources {
     private Long resourceId;
 
     @Column(nullable = false)
-    private Long courseId;
-
-    @Column(nullable = false)
     private String title;
 
     private String description;

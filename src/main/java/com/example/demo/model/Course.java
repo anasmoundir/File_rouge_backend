@@ -34,17 +34,6 @@ public class Course {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    // create methode setSubcategory
-//    public void setSubcategory(Subcategory subcategory) {
-//        this.subcategory = subcategory;
-//    }
-//    public  void setResources(List<Resources> resources) {
-//        this.resources = resources;
-//    }
-//    // set category
-//    public void setCategory(Category category) {
-//        this.category = category;
-//    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subcategory_id")
