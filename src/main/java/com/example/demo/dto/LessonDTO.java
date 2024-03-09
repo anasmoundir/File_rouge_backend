@@ -1,12 +1,18 @@
 package com.example.demo.dto;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
+@Data
 public class LessonDTO {
+    private Long lessonId;
     private String title;
     private String content;
-    private Long courseId;
+    private CourseDTO course;
+    private List<ResourcesDTO> resources;
 }

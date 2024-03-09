@@ -10,7 +10,9 @@ public class Teacher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private boolean approved;
+
     private String educationalQualifications;
     private String teachingExperience;
     private String professionalExperience;

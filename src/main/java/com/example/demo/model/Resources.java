@@ -8,17 +8,23 @@ public class Resources {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long resourceId;
+
+    @Column(nullable = false)
     private Long courseId;
 
-
+    @Column(nullable = false)
     private String title;
+
     private String description;
+
+    @Column(nullable = false)
     private String url;
 
-    public Long getCourseId() {
-        return courseId;
-    }
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lesson_id")
+    private Lesson lesson;
 }
