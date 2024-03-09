@@ -1,8 +1,9 @@
 package com.example.demo.service.serviceImplementation;
 
+import com.example.demo.model.Resources;
 import com.example.demo.Mapper.ResourceMapper;
-import com.example.demo.dto.ResourceDTO;
-import com.example.demo.model.Resource;
+import com.example.demo.dto.ResourcesDTO;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ResourceRepository;
 import com.example.demo.service.interfaces.ResourceService;
 import org.springframework.stereotype.Service;
@@ -18,31 +19,30 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public ResourceDTO createResource(ResourceDTO resourceDTO) {
-        Resource resource = resourceMapper.resourceDTOToResource(resourceDTO);
-        resource = resourceRepository.save(resource);
-        return resourceMapper.resourceToResourceDTO(resource);
+    public ResourcesDTO createResource(ResourcesDTO resourcesDTO) {
+        Resources resources = (Resources) resourceMapper.resourceDTOToResource(resourcesDTO);
+        resources = resourceRepository.save(resources);
+        return resourceMapper.resourceToResourceDTO(resources);
     }
 
     @Override
-    public ResourceDTO getResourceById(Long id) {
-        Resource resource = resourceRepository.findById(id)
+    public ResourcesDTO getResourceById(Long id) {
+        Resources resources = resourceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Resource not found with id: " + id));
-        return resourceMapper.resourceToResourceDTO(resource);
+        return resourceMapper.resourceToResourceDTO(resources);
     }
 
     @Override
-    public ResourceDTO updateResource(Long id, ResourceDTO resourceDTO) {
-        Resource existingResource = resourceRepository.findById(id)
+    public ResourcesDTO updateResource(Long id, ResourcesDTO resourcesDTO) {
+        Resources existingResources = resourceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Resource not found with id: " + id));
 
-        // Update existing resource with new details
-        existingResource.setTitle(resourceDTO.getTitle());
-        existingResource.setDescription(resourceDTO.getDescription());
-        existingResource.setUrl(resourceDTO.getUrl());
+        existingResources.setTitle(resourcesDTO.getTitle());
+        existingResources.setDescription(resourcesDTO.getDescription());
+        existingResources.setUrl(resourcesDTO.getUrl());
 
-        existingResource = resourceRepository.save(existingResource);
-        return resourceMapper.resourceToResourceDTO(existingResource);
+        existingResources = resourceRepository.save(existingResources);
+        return resourceMapper.resourceToResourceDTO(existingResources);
     }
 
     @Override

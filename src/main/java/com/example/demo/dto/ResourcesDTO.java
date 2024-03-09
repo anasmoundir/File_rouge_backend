@@ -1,12 +1,14 @@
 package com.example.demo.dto;
 
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class LessonDTO {
+public class ResourcesDTO {
     private String title;
-    private String content;
+    private String description;
+    private String url;
     private Long courseId;
 }

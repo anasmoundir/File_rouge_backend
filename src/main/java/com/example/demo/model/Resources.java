@@ -1,8 +1,10 @@
 package com.example.demo.model;
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
-public class Resource {
+@Data
+public class Resources {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long resourceId;

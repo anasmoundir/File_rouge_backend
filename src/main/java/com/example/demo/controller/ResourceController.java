@@ -1,9 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.ResourceDTO;
-import com.example.demo.model.Resource;
+import com.example.demo.dto.ResourcesDTO;
 import com.example.demo.service.interfaces.ResourceService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,21 +16,21 @@ public class ResourceController {
     }
 
     @PostMapping
-    public ResponseEntity<ResourceDTO> createResource(@RequestBody ResourceDTO resourceDTO) {
-        ResourceDTO savedResourceDTO = resourceService.createResource(resourceDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedResourceDTO);
+    public ResponseEntity<ResourcesDTO> createResource(@RequestBody ResourcesDTO resourcesDTO) {
+        ResourcesDTO savedResourcesDTO = resourceService.createResource(resourcesDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedResourcesDTO);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResourceDTO> getResourceById(@PathVariable Long id) {
-        ResourceDTO resourceDTO = resourceService.getResourceById(id);
-        return ResponseEntity.ok(resourceDTO);
+    public ResponseEntity<ResourcesDTO> getResourceById(@PathVariable Long id) {
+        ResourcesDTO resourcesDTO = resourceService.getResourceById(id);
+        return ResponseEntity.ok(resourcesDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResourceDTO> updateResource(@PathVariable Long id, @RequestBody ResourceDTO resourceDTO) {
-        ResourceDTO updatedResourceDTO = resourceService.updateResource(id, resourceDTO);
-        return ResponseEntity.ok(updatedResourceDTO);
+    public ResponseEntity<ResourcesDTO> updateResource(@PathVariable Long id, @RequestBody ResourcesDTO resourcesDTO) {
+        ResourcesDTO updatedResourcesDTO = resourceService.updateResource(id, resourcesDTO);
+        return ResponseEntity.ok(updatedResourcesDTO);
     }
 
     @DeleteMapping("/{id}")

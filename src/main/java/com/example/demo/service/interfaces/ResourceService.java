@@ -1,11 +1,10 @@
 package com.example.demo.service.interfaces;
 
-import com.example.demo.dto.ResourceDTO;
-import com.example.demo.model.Resource;
+import com.example.demo.dto.ResourcesDTO;
 
 public interface ResourceService {
-    ResourceDTO createResource(ResourceDTO resourceDTO);
-    ResourceDTO getResourceById(Long id);
-    ResourceDTO updateResource(Long id, ResourceDTO resourceDTO);
+    ResourcesDTO createResource(ResourcesDTO resourcesDTO);
+    ResourcesDTO getResourceById(Long id);
+    ResourcesDTO updateResource(Long id, ResourcesDTO resourcesDTO);
     void deleteResource(Long id);
 }

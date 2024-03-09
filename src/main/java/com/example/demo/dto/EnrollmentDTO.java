@@ -5,8 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LessonDTO {
-    private String title;
-    private String content;
+public class EnrollmentDTO {
+    private Long userId;
     private Long courseId;
 }

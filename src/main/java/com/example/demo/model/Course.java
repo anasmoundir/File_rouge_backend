@@ -32,5 +32,5 @@ public class Course {
     private Subcategory subcategory;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Resource> resources;
+    private List<Resources> resources;
 }
