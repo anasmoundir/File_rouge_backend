@@ -23,32 +23,63 @@ public class CourseController {
                                                   @RequestParam Long categoryId,
                                                   @RequestParam Long subcategoryId,
                                                   @RequestParam Long instructorId) {
-        CourseDTO createdCourse = courseService.createCourse(courseDTO, categoryId, subcategoryId, instructorId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdCourse);
+        try {
+            CourseDTO createdCourse = courseService.createCourse(courseDTO, categoryId, subcategoryId, instructorId);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdCourse);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CourseDTO> getCourseById(@PathVariable Long id) {
-        CourseDTO courseDTO = courseService.getCourseById(id);
-        return ResponseEntity.ok(courseDTO);
+        try {
+            CourseDTO courseDTO = courseService.getCourseById(id);
+            return ResponseEntity.ok(courseDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CourseDTO> updateCourse(@PathVariable Long id,
                                                   @RequestBody CourseDTO courseDTO) {
-        CourseDTO updatedCourse = courseService.updateCourse(id, courseDTO);
-        return ResponseEntity.ok(updatedCourse);
+        try {
+            CourseDTO updatedCourse = courseService.updateCourse(id, courseDTO);
+            return ResponseEntity.ok(updatedCourse);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
-        courseService.deleteCourse(id);
-        return ResponseEntity.noContent().build();
+        try {
+            courseService.deleteCourse(id);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping
     public ResponseEntity<List<CourseDTO>> getAllCourses() {
-        List<CourseDTO> courses = courseService.getAllCourses();
-        return ResponseEntity.ok(courses);
+        try {
+            List<CourseDTO> courses = courseService.getAllCourses();
+            return ResponseEntity.ok(courses);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    @GetMapping("/search")
+    public ResponseEntity<List<CourseDTO>> searchCourses(@RequestParam(required = false) String title,
+                                                         @RequestParam(required = false) Long categoryId,
+                                                         @RequestParam(required = false) Long instructorId) {
+        try {
+            List<CourseDTO> courses = courseService.searchCourses(title, categoryId, instructorId);
+            return ResponseEntity.ok(courses);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

@@ -116,7 +116,7 @@ public class courseServiceImpl  implements CourseService {
         Subcategory subcategory = subcategoryRepository.findById(subcategoryId)
                 .orElseThrow(() -> new SubcategoryNotFoundException("Subcategory not found with id: " + subcategoryId));
 
-        List<Course> courses = courseRepository.findBySubcategory(subcategory);
+        List<Course> courses = courseRepository.findBySubcategory(subcategory.getId());
         return courses.stream()
                 .map(courseMapper::courseToCourseDTO)
                 .collect(Collectors.toList());
@@ -182,5 +182,31 @@ public class courseServiceImpl  implements CourseService {
         return courseMapper.courseToCourseDTO(courseRepository.save(course));
     }
 
+
+    @Override
+    public List<CourseDTO> searchCourses(String title, Long categoryId, Long instructorId) {
+        List<Course> courses;
+
+        if (title != null && categoryId != null && instructorId != null) {
+            courses = courseRepository.findByTitleContainingAndCategoryIdAndInstructorId(title, categoryId, instructorId);
+        } else if (title != null && categoryId != null) {
+            courses = courseRepository.findByTitleContainingAndCategoryId(title, categoryId);
+        } else if (title != null && instructorId != null) {
+            courses = courseRepository.findByTitleContainingAndInstructorId(title, instructorId);
+        } else if (categoryId != null && instructorId != null) {
+            courses = courseRepository.findByCategoryIdAndInstructorId(categoryId, instructorId);
+        } else if (title != null) {
+            courses = courseRepository.findByTitleContaining(title);
+        } else if (categoryId != null) {
+            courses = courseRepository.findByCategoryId(categoryId);
+        } else if (instructorId != null) {
+            courses = courseRepository.findByInstructorId(instructorId);
+        } else {
+            courses = courseRepository.findAll();
+        }
+        return courses.stream()
+                .map(courseMapper::courseToCourseDTO)
+                .collect(Collectors.toList());
+    }
 
 }

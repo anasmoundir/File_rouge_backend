@@ -19,25 +19,41 @@ public class ProgresseController {
 
     @PostMapping
     public ResponseEntity<Progress> createProgress(@RequestBody Progress progress) {
-        Progress createdProgress = progressService.createProgress(progress);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdProgress);
+        try {
+            Progress createdProgress = progressService.createProgress(progress);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdProgress);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Progress> getProgressById(@PathVariable Long id) {
-        Progress progress = progressService.getProgressById(id);
-        return ResponseEntity.ok().body(progress);
+        try {
+            Progress progress = progressService.getProgressById(id);
+            return ResponseEntity.ok().body(progress);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Progress> updateProgress(@PathVariable Long id, @RequestBody Progress progress) {
-        Progress updatedProgress = progressService.updateProgress(id, progress);
-        return ResponseEntity.ok().body(updatedProgress);
+        try {
+            Progress updatedProgress = progressService.updateProgress(id, progress);
+            return ResponseEntity.ok().body(updatedProgress);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProgress(@PathVariable Long id) {
-        progressService.deleteProgress(id);
-        return ResponseEntity.noContent().build();
+        try {
+            progressService.deleteProgress(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

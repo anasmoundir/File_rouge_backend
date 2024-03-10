@@ -11,8 +11,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/lesson")
-public class LessonController
-{
+public class LessonController {
+
     private final LessonService lessonService;
 
     @Autowired
@@ -21,48 +21,92 @@ public class LessonController
     }
 
     @PostMapping
-    public LessonDTO createLesson(@RequestBody LessonDTO lessonDTO) {
-        return lessonService.createLesson(lessonDTO);
+    public ResponseEntity<?> createLesson(@RequestBody LessonDTO lessonDTO) {
+        try {
+            LessonDTO createdLesson = lessonService.createLesson(lessonDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdLesson);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating lesson: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public LessonDTO getLessonById(@PathVariable Long id) {
-        return lessonService.getLessonById(id);
+    public ResponseEntity<?> getLessonById(@PathVariable Long id) {
+        try {
+            LessonDTO lessonDTO = lessonService.getLessonById(id);
+            return ResponseEntity.ok(lessonDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lesson not found with ID: " + id);
+        }
     }
 
     @PutMapping("/{id}")
-    public LessonDTO updateLesson(@PathVariable Long id, @RequestBody LessonDTO lessonDTO) {
-        return lessonService.updateLesson(id, lessonDTO);
+    public ResponseEntity<?> updateLesson(@PathVariable Long id, @RequestBody LessonDTO lessonDTO) {
+        try {
+            LessonDTO updatedLesson = lessonService.updateLesson(id, lessonDTO);
+            return ResponseEntity.ok(updatedLesson);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating lesson: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteLesson(@PathVariable Long id) {
-        lessonService.deleteLesson(id);
+    public ResponseEntity<?> deleteLesson(@PathVariable Long id) {
+        try {
+            lessonService.deleteLesson(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting lesson: " + e.getMessage());
+        }
     }
 
     @GetMapping
-    public List<LessonDTO> getAllLessons() {
-        return lessonService.getAllLessons();
+    public ResponseEntity<?> getAllLessons() {
+        try {
+            List<LessonDTO> lessons = lessonService.getAllLessons();
+            return ResponseEntity.ok(lessons);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching lessons: " + e.getMessage());
+        }
     }
 
     @GetMapping("/student/{studentId}")
-    public List<LessonDTO> getLessonsByStudentId(@PathVariable Long studentId) {
-        return lessonService.getLessonsByStudentId(studentId);
+    public ResponseEntity<?> getLessonsByStudentId(@PathVariable Long studentId) {
+        try {
+            List<LessonDTO> lessons = lessonService.getLessonsByStudentId(studentId);
+            return ResponseEntity.ok(lessons);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching lessons for student ID " + studentId + ": " + e.getMessage());
+        }
     }
 
     @GetMapping("/category/{categoryId}")
-    public List<LessonDTO> getLessonsByCategoryId(@PathVariable Long categoryId) {
-        return lessonService.getLessonsByCategoryId(categoryId);
+    public ResponseEntity<?> getLessonsByCategoryId(@PathVariable Long categoryId) {
+        try {
+            List<LessonDTO> lessons = lessonService.getLessonsByCategoryId(categoryId);
+            return ResponseEntity.ok(lessons);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching lessons for category ID " + categoryId + ": " + e.getMessage());
+        }
     }
 
     @GetMapping("/teacher/{teacherId}")
-    public List<LessonDTO> getLessonsByTeacherId(@PathVariable Long teacherId) {
-        return lessonService.getLessonsByTeacherId(teacherId);
+    public ResponseEntity<?> getLessonsByTeacherId(@PathVariable Long teacherId) {
+        try {
+            List<LessonDTO> lessons = lessonService.getLessonsByTeacherId(teacherId);
+            return ResponseEntity.ok(lessons);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching lessons for teacher ID " + teacherId + ": " + e.getMessage());
+        }
     }
 
     @GetMapping("/subcategory/{subcategoryId}")
-    public List<LessonDTO> getLessonsBySubcategoryId(@PathVariable Long subcategoryId) {
-        return lessonService.getLessonsBySubcategoryId(subcategoryId);
+    public ResponseEntity<?> getLessonsBySubcategoryId(@PathVariable Long subcategoryId) {
+        try {
+            List<LessonDTO> lessons = lessonService.getLessonsBySubcategoryId(subcategoryId);
+            return ResponseEntity.ok(lessons);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching lessons for subcategory ID " + subcategoryId + ": " + e.getMessage());
+        }
     }
-
 }

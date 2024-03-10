@@ -14,12 +14,24 @@ public interface CourseService {
     CourseDTO updateCourse(Long id, CourseDTO courseDTO);
     void deleteCourse(Long id);
     List<CourseDTO> getAllCourses();
+
+    @Transactional(readOnly = true)
     List<CourseDTO> getCoursesByCategory(Long categoryId);
+
+    @Transactional(readOnly = true)
     List<CourseDTO> getCoursesBySubcategory(Long subcategoryId);
+
+    @Transactional(readOnly = true)
     List<CourseDTO> getCoursesByInstructor(Long instructorId);
+
+    @Transactional(readOnly = true)
     UserDTO getInstructorOfCourse(Long courseId);
-    CourseDTO addResourcesToLesson(Long courseId, Long lessonId, List<ResourcesDTO> resourceDTOs);
 
     @Transactional
     CourseDTO addLessonToCourse(Long courseId, LessonDTO lessonDTO);
+
+    @Transactional
+    CourseDTO addResourcesToLesson(Long courseId, Long lessonId, List<ResourcesDTO> resourceDTOs);
+
+    List<CourseDTO> searchCourses(String title, Long categoryId, Long instructorId);
 }
