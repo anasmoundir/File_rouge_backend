@@ -75,7 +75,7 @@ public class LessonServiceImpl implements LessonService {
     @Override
     @Transactional(readOnly = true)
     public List<LessonDTO> getLessonsByStudentId(Long studentId) {
-        List<Lesson> lessons = lessonRepository.findByCourse_Instructor_User_UserId(studentId);
+        List<Lesson> lessons = lessonRepository.findLessonsByInstructorUserId(studentId);
         return lessons.stream()
                 .map(lessonMapper::lessonToLessonDTO)
                 .collect(Collectors.toList());
@@ -84,7 +84,7 @@ public class LessonServiceImpl implements LessonService {
     @Override
     @Transactional(readOnly = true)
     public List<LessonDTO> getLessonsByCategoryId(Long categoryId) {
-        List<Lesson> lessons = lessonRepository.findByCourse_Category_Id(categoryId);
+        List<Lesson> lessons = lessonRepository.findLessonsByCategoryId(categoryId);
         return lessons.stream()
                 .map(lessonMapper::lessonToLessonDTO)
                 .collect(Collectors.toList());
@@ -93,7 +93,7 @@ public class LessonServiceImpl implements LessonService {
     @Override
     @Transactional(readOnly = true)
     public List<LessonDTO> getLessonsByTeacherId(Long teacherId) {
-        List<Lesson> lessons = lessonRepository.findByCourse_Instructor_User_UserId(teacherId);
+        List<Lesson> lessons = lessonRepository.findLessonsByInstructorUserId(teacherId);
         return lessons.stream()
                 .map(lessonMapper::lessonToLessonDTO)
                 .collect(Collectors.toList());
@@ -102,7 +102,7 @@ public class LessonServiceImpl implements LessonService {
     @Override
     @Transactional(readOnly = true)
     public List<LessonDTO> getLessonsBySubcategoryId(Long subcategoryId) {
-        List<Lesson> lessons = lessonRepository.findByCourse_Subcategory_Id(subcategoryId);
+        List<Lesson> lessons = lessonRepository.findLessonsBySubcategoryId(subcategoryId);
         return lessons.stream()
                 .map(lessonMapper::lessonToLessonDTO)
                 .collect(Collectors.toList());

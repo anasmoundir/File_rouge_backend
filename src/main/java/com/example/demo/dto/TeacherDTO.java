@@ -1,16 +1,12 @@
-package com.example.demo.model;
+package com.example.demo.dto;
 
-import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Entity
-@Data
-public class Teacher {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Getter
+@Setter
+public class TeacherDTO {
     private Long id;
-
-    @Column(nullable = false)
     private boolean approved;
     private String educationalQualifications;
     private String teachingExperience;
@@ -19,8 +15,5 @@ public class Teacher {
     private String references;
     private String sampleLessonPlans;
     private String availability;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Long userId;
 }
