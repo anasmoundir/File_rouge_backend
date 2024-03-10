@@ -1,6 +1,6 @@
 package com.example.demo.service.serviceImplementation;
 
-import com.example.demo.Mapper.EnrollmentMapper;
+import com.example.demo.Mapper.EnrollementMapper;
 import com.example.demo.dto.EnrollmentDTO;
 import com.example.demo.exception.CourseNotFoundException;
 import com.example.demo.exception.EnrollmentNotFoundException;
@@ -18,13 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class EnrollmentServiceImpl implements EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
-    private final EnrollmentMapper enrollmentMapper;
+    private final EnrollementMapper enrollmentMapper;
 
     private  final UserRepository userRepository;
 
     private final CourseRepository courseRepository;
 
-    public EnrollmentServiceImpl(EnrollmentRepository enrollmentRepository, EnrollmentMapper enrollmentMapper, UserRepository userRepository, CourseRepository courseRepository) {
+    public EnrollmentServiceImpl(EnrollmentRepository enrollmentRepository, EnrollementMapper enrollmentMapper, UserRepository userRepository, CourseRepository courseRepository) {
         this.enrollmentRepository = enrollmentRepository;
         this.enrollmentMapper = enrollmentMapper;
         this.userRepository = userRepository;

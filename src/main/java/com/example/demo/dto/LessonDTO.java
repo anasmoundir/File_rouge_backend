@@ -6,8 +6,6 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@Setter
 @Data
 public class LessonDTO {
     private Long lessonId;
