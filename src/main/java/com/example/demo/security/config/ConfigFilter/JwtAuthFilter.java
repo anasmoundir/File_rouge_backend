@@ -1,8 +1,9 @@
 package com.example.demo.security.config.ConfigFilter;
 
 
-import com.example.demo.configuration.configServices.JwtService;
-import com.example.demo.configuration.configServices.UserDetailsServiceImpl;
+
+import com.example.demo.security.config.ConfigService.JwtService;
+import com.example.demo.security.config.ConfigService.UserDetailServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +26,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private UserDetailServiceImpl userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

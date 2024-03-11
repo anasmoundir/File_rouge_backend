@@ -25,6 +25,8 @@ public class User {
     @JoinColumn(name = "user_role_id")
     private UserRole userRole;
 
+    private boolean enabled;
+
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserDetail userDetail;
