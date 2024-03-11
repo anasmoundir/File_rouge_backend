@@ -1,6 +1,7 @@
 package com.example.demo.service.serviceImplementation;
 import com.example.demo.Mapper.TeacherMapper;
 import com.example.demo.dto.TeacherDTO;
+import com.example.demo.dto.UserDTO;
 import com.example.demo.exception.TeacherNotFoundException;
 import com.example.demo.model.Teacher;
 import com.example.demo.repository.TeacherRepository;
@@ -23,14 +24,15 @@ public class TeacherServiceImpl implements TeacherService {
         this.teacherMapper = teacherMapper;
     }
 
-    @Override
-    @Transactional
-    public TeacherDTO validateTeacher(Long teacherId, boolean approved) {
-        Teacher teacher = teacherRepository.findById(teacherId)
-                .orElseThrow(() -> new TeacherNotFoundException("Teacher not found with id: " + teacherId));
-        teacher = teacherRepository.approveTeacher(teacherId);
-        return teacherMapper.teacherToTeacherDTO(teacher);
-    }
+
+        @Override
+        @Transactional
+        public TeacherDTO validateTeacher(Long teacherId, boolean approved) {
+            Teacher teacher = teacherRepository.findById(teacherId)
+                    .orElseThrow(() -> new TeacherNotFoundException("Teacher not found with id: " + teacherId));
+            teacher = teacherRepository.approveTeacher(teacherId);
+            return teacherMapper.teacherToTeacherDTO(teacher);
+        }
 
     @Override
     public List<TeacherDTO> getAllTeachers() {

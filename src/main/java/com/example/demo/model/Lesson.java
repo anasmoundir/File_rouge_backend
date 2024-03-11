@@ -10,6 +10,7 @@ import java.util.List;
 public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "lesson_id")
     private Long lessonId;
 
     @Column(nullable = false)

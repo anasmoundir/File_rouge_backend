@@ -17,17 +17,17 @@ public class CourseController {
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
     }
-
     @PostMapping
-    public ResponseEntity<CourseDTO> createCourse(@RequestBody CourseDTO courseDTO,
-                                                  @RequestParam Long categoryId,
-                                                  @RequestParam Long subcategoryId,
-                                                  @RequestParam Long instructorId) {
+    public ResponseEntity<?> createCourse(@RequestBody CourseDTO courseDTO,
+                                          @RequestParam Long categoryId,
+                                          @RequestParam Long subcategoryId,
+                                          @RequestParam Long instructorId) {
         try {
             CourseDTO createdCourse = courseService.createCourse(courseDTO, categoryId, subcategoryId, instructorId);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdCourse);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            String errorMessage = "Error creating course: " + e.getMessage();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
     }
 
