@@ -22,13 +22,12 @@ public class RegistrationController {
     @PostMapping
     public ResponseEntity<String> registerUserAndTeacher(@RequestBody UserTeacherRequest request) {
         try {
-            registrationService.register(request.getUser(), request.getTeacher());
+            registrationService.register(request);
             return ResponseEntity.status(HttpStatus.CREATED).body("Teacher registered successfully." );
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error registering user and teacher: " + e.getMessage());
         }
     }
-
 
 }
 

@@ -1,10 +1,10 @@
 package com.example.demo.service.serviceImplementation;
 
 import com.example.demo.Mapper.TeacherMapper;
-import com.example.demo.Mapper.userMapper;
 import com.example.demo.dto.SignUpDTO;
 import com.example.demo.dto.TeacherDTO;
 import com.example.demo.dto.UserDTO;
+import com.example.demo.dto.UserTeacherRequest;
 import com.example.demo.model.Teacher;
 import com.example.demo.model.User;
 import com.example.demo.model.UserRole;
@@ -21,26 +21,43 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final UserRepository userRepository;
     private final TeacherRepository teacherRepository;
     private final UserRoleRepository userRoleRepository;
-
+    private final TeacherMapper teacherMapper;
     @Autowired
-    public RegistrationServiceImpl(UserRepository userRepository, TeacherRepository teacherRepository, UserRoleRepository userRoleRepository) {
+    public RegistrationServiceImpl(UserRepository userRepository, TeacherRepository teacherRepository, UserRoleRepository userRoleRepository, TeacherMapper teacherMapper) {
         this.userRepository = userRepository;
         this.teacherRepository = teacherRepository;
         this.userRoleRepository = userRoleRepository;
+        this.teacherMapper = teacherMapper;
     }
+
+
+
 
     @Override
     @Transactional
-    public void register(UserDTO userDTO, TeacherDTO teacherDTO) {
+    public void register(UserTeacherRequest request) {
+        SignUpDTO signUpDTO = request.getUser();
+        TeacherDTO teacherDTO = request.getTeacher();
         UserRole userRole = determineUserRole(teacherDTO);
-        Long userId = registerUser(userDTO, userRole);
+        Long userId = registerUser(signUpDTO, userRole);
+
         if (teacherDTO != null) {
             registerTeacher(teacherDTO, userId);
         }
     }
 
-
-    private UserRole determineUserRole(TeacherDTO teacherDTO) {
+    @Override
+    public Long registerUser(SignUpDTO signUpDTO, UserRole userRole) {
+        User user = new User();
+        user.setUsername(signUpDTO.getUsername());
+        user.setEmail(signUpDTO.getEmail());
+        user.setPassword(signUpDTO.getPassword());
+        user.setUserRole(userRole);
+        User savedUser = userRepository.save(user);
+        return savedUser.getUserId();
+    }
+    @Override
+    public UserRole determineUserRole(TeacherDTO teacherDTO) {
         if (teacherDTO != null) {
             return userRoleRepository.findByRoleName("TEACHER");
         } else {
@@ -48,22 +65,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private Long registerUser(UserDTO userDTO, UserRole userRole) {
-        User user = new User();
-        user.setUsername(userDTO.getUsername());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
-        user.setUserRole(userRole);
-        User savedUser = userRepository.save(user);
-        return savedUser.getUserId();
+    @Override
+    public void registerTeacher(TeacherDTO teacherDTO, Long userId) {
+
     }
 
-    private void registerTeacher(TeacherDTO teacherDTO, Long userId) {
-        teacherDTO.setUserId(userId);
-        Teacher teacher = new Teacher();
-        // Set teacher attributes
-        teacher.setUser(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found")));
-        teacherRepository.save(teacher);
-    }
 
 }

@@ -3,13 +3,18 @@ package com.example.demo.service.interfaces;
 import com.example.demo.dto.SignUpDTO;
 import com.example.demo.dto.TeacherDTO;
 import com.example.demo.dto.UserDTO;
+import com.example.demo.dto.UserTeacherRequest;
+import com.example.demo.model.UserRole;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface RegistrationService {
-    void register(UserDTO userDTO, TeacherDTO teacherDTO);
 
-    Long registerUser(UserDTO userDTO);
+    @Transactional
+    void register(UserTeacherRequest request);
 
-    Long registerUser(SignUpDTO signUpDTO);
+    Long registerUser(SignUpDTO signUpDTO, UserRole userRole);
+
+    UserRole determineUserRole(TeacherDTO teacherDTO);
 
     void registerTeacher(TeacherDTO teacherDTO, Long userId);
 }

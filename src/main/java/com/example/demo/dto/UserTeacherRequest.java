@@ -5,8 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-
 public class UserTeacherRequest {
-    private UserDTO user;
+    private SignUpDTO user;
     private TeacherDTO teacher;
 }
