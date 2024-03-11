@@ -9,6 +9,7 @@ import lombok.Data;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long userId;
 
     @Column(nullable = false, unique = true)
@@ -24,11 +25,8 @@ public class User {
     @JoinColumn(name = "user_role_id")
     private UserRole userRole;
 
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserDetail userDetail;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "user_id")
-    private Teacher teacher;
 
 }

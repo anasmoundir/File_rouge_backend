@@ -12,11 +12,11 @@ public interface RegistrationService {
 
 
     @Transactional
-    void register(User user);
+    void register(UserTeacherRequest request);
 
-    UserDTO registerUser(SignUpDTO signUpDTO, UserRole userRole);
+    Long registerUser(SignUpDTO signUpDTO, UserRole userRole);
 
     UserRole determineUserRole(TeacherDTO teacherDTO);
 
-    void registerTeacher(TeacherDTO teacherDTO, UserDTO userDTO);
+    void registerTeacher(TeacherDTO teacherDTO, Long userId);
 }

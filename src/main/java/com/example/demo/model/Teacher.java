@@ -16,11 +16,12 @@ public class Teacher {
     private String teachingExperience;
     private String professionalExperience;
     private String teachingPhilosophy;
+    @Column(name = "teacher_references")
     private String references;
     private String sampleLessonPlans;
     private String availability;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 }

@@ -4,7 +4,7 @@
     import com.example.demo.Mapper.TeacherMapper;
     import com.example.demo.dto.SignUpDTO;
     import com.example.demo.dto.TeacherDTO;
-    import com.example.demo.dto.UserDTO;
+    import com.example.demo.dto.UserTeacherRequest;
     import com.example.demo.model.Teacher;
     import com.example.demo.model.User;
     import com.example.demo.model.UserRole;
@@ -12,7 +12,6 @@
     import com.example.demo.repository.UserRepository;
     import com.example.demo.repository.UserRoleRepository;
     import com.example.demo.service.interfaces.RegistrationService;
-    import com.example.demo.service.interfaces.TeacherService;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.stereotype.Service;
     import org.springframework.transaction.annotation.Transactional;
@@ -40,23 +39,43 @@
 
         @Override
         @Transactional
-        public void register(User user) {
-            UserRole userRole = determineUserRole(user.getTeacher() != null ? teacherMapper.teacherToTeacherDTO(user.getTeacher()) : null);
-            user.setUserRole(userRole);
-            User savedUser = userRepository.save(user);
+        public void register(UserTeacherRequest request) {
+            SignUpDTO signUpDTO = request.getUser();
+            TeacherDTO teacherDTO = request.getTeacher();
+            UserRole userRole = determineUserRole(teacherDTO);
+            Long userId = registerUser(signUpDTO, userRole);
+
+            if (teacherDTO != null) {
+                registerTeacher(teacherDTO, userId);
+            }
         }
 
         @Override
-        public UserDTO registerUser(SignUpDTO signUpDTO, UserRole userRole) {
+        public Long registerUser(SignUpDTO signUpDTO, UserRole userRole) {
+            // Check if the username already exists
+            if (userRepository.existsByUsername(signUpDTO.getUsername())) {
+                throw new RuntimeException("Username already exists");
+            }
+
+            // Create a new user entity
             User user = new User();
             user.setUsername(signUpDTO.getUsername());
             user.setEmail(signUpDTO.getEmail());
             user.setPassword(signUpDTO.getPassword());
             user.setUserRole(userRole);
-            User savedUser = userRepository.save(user);
-            return courseMapper.userToUserDTO(savedUser);
-        }
 
+            // Save the user entity
+            User savedUser = userRepository.save(user);
+
+            // If the user role is TEACHER, create a new teacher entity
+            if (userRole.getRoleName().equals("TEACHER")) {
+                Teacher teacher = new Teacher();
+                teacher.setUser(savedUser);
+                teacherRepository.save(teacher);
+            }
+
+            return savedUser.getUserId();
+        }
         @Override
         public UserRole determineUserRole(TeacherDTO teacherDTO) {
             if (teacherDTO != null) {
@@ -67,17 +86,13 @@
         }
 
         @Override
-        public void registerTeacher(TeacherDTO teacherDTO, UserDTO userDTO) {
-            User user = userRepository.findById(userDTO.getUserId())
+        public void registerTeacher(TeacherDTO teacherDTO, Long userId) {
+            User user = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
-
-
-            teacherDTO.setUser(userDTO);
 
             Teacher teacher = teacherMapper.teacherDTOToTeacher(teacherDTO);
             teacher.setUser(user);
 
             teacherRepository.save(teacher);
         }
-
     }
