@@ -17,7 +17,6 @@ public class ProgressServiceImpl implements ProgressService {
     public ProgressServiceImpl(ProgressRepository progressRepository) {
         this.progressRepository = progressRepository;
     }
-
     @Override
     public Progress createProgress(Progress progress) {
         return progressRepository.save(progress);

@@ -15,5 +15,5 @@ public class TeacherDTO {
     private String references;
     private String sampleLessonPlans;
     private String availability;
-    private Long userId;
+    private UserDTO user;
 }
