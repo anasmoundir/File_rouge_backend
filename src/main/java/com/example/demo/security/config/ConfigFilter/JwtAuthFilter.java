@@ -22,7 +22,7 @@ import java.util.Collection;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
-    @Autowired
+
     private JwtService jwtService;
 
     @Autowired

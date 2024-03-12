@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.dto.CategoryDTO;
 import com.example.demo.exception.CategoryNotFoundException;
 import com.example.demo.service.interfaces.CategoryService;
-import org.apache.catalina.filters.ExpiresFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

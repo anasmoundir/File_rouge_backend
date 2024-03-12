@@ -25,9 +25,9 @@ public class EnrollementController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
     @DeleteMapping("/{enrollmentId}")
-    public ResponseEntity<Void> cancelEnrollment(@PathVariable Long enrollmentId) {
+    public ResponseEntity<Void> cancelEnrollment(@PathVariable Long enrollmentId)
+    {
         try {
             enrollmentService.cancelEnrollment(enrollmentId);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();

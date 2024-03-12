@@ -13,8 +13,11 @@
     import com.example.demo.repository.UserRoleRepository;
     import com.example.demo.service.interfaces.RegistrationService;
     import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.stereotype.Service;
     import org.springframework.transaction.annotation.Transactional;
+
+    import static com.example.demo.security.config.SecurityConfig.passwordEncoder;
 
     @Service
     public class RegistrationServiceImpl implements RegistrationService {
@@ -23,6 +26,8 @@
         private final UserRoleRepository userRoleRepository;
         private final TeacherMapper teacherMapper;
         private final CourseMapper courseMapper;
+        @Autowired
+        private PasswordEncoder passwordEncoder;
 
 
         @Autowired
@@ -52,22 +57,16 @@
 
         @Override
         public Long registerUser(SignUpDTO signUpDTO, UserRole userRole) {
-            // Check if the username already exists
             if (userRepository.existsByUsername(signUpDTO.getUsername())) {
                 throw new RuntimeException("Username already exists");
             }
 
-            // Create a new user entity
             User user = new User();
             user.setUsername(signUpDTO.getUsername());
             user.setEmail(signUpDTO.getEmail());
-            user.setPassword(signUpDTO.getPassword());
             user.setUserRole(userRole);
-
-            // Save the user entity
+            user.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));
             User savedUser = userRepository.save(user);
-
-            // If the user role is TEACHER, create a new teacher entity
             if (userRole.getRoleName().equals("TEACHER")) {
                 Teacher teacher = new Teacher();
                 teacher.setUser(savedUser);
@@ -76,6 +75,26 @@
 
             return savedUser.getUserId();
         }
+
+        @Override
+        public boolean activateUser(String username) {
+            User user = userRepository.findByUsername(username);
+            if (user == null) {
+                return false;
+            } else {
+                user.setEnabled(true);
+                userRepository.save(user);
+                return true;
+            }
+        }
+
+        @Override
+        public boolean isEnable(String username) {
+            User user = userRepository.findByUsername(username);
+            return user != null && user.isEnabled();
+        }
+
+
         @Override
         public UserRole determineUserRole(TeacherDTO teacherDTO) {
             if (teacherDTO != null) {

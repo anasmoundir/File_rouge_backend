@@ -16,6 +16,10 @@ public interface RegistrationService {
 
     Long registerUser(SignUpDTO signUpDTO, UserRole userRole);
 
+    boolean activateUser(String username);
+
+    boolean isEnable(String username);
+
     UserRole determineUserRole(TeacherDTO teacherDTO);
 
     void registerTeacher(TeacherDTO teacherDTO, Long userId);

@@ -1,7 +1,6 @@
 package com.example.demo.service.serviceImplementation;
 import com.example.demo.Mapper.TeacherMapper;
 import com.example.demo.dto.TeacherDTO;
-import com.example.demo.dto.UserDTO;
 import com.example.demo.exception.TeacherNotFoundException;
 import com.example.demo.model.Teacher;
 import com.example.demo.repository.TeacherRepository;

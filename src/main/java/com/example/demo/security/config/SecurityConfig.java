@@ -43,8 +43,8 @@ public class SecurityConfig
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/member/**").hasAnyAuthority("MANAGER", "JURY")
-                        .requestMatchers("/api/competition/**").hasAnyAuthority("JURY", "ADHERENT", "MANAGER")
+                        .requestMatchers("/api/Teacher/**").hasAuthority("TEACHER")
+                        .requestMatchers("/api/Admin/**").hasAuthority("JURY")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(AbstractHttpConfigurer::disable)

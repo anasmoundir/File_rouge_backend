@@ -3,10 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.Mapper.TeacherMapper;
 import com.example.demo.Mapper.userMapper;
 import com.example.demo.dto.SignUpDTO;
-import com.example.demo.dto.UserDTO;
-import com.example.demo.dto.UserTeacherRequest;
-import com.example.demo.model.Teacher;
-import com.example.demo.model.User;
 import com.example.demo.model.UserRole;
 import com.example.demo.repository.UserRoleRepository;
 import com.example.demo.service.interfaces.RegistrationService;
@@ -19,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/registration")
+@RequestMapping("api/auth/registration")
 public class RegistrationController {
     private  final RegistrationService registrationService;
     private final TeacherMapper teacherMapper;
