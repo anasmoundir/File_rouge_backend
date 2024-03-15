@@ -42,7 +42,7 @@ public class SecurityConfig
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll().requestMatchers("api/teacher/register").permitAll()
                         .requestMatchers("/api/Teacher/**").hasAuthority("TEACHER")
                         .requestMatchers("/api/Admin/**").hasAuthority("JURY")
                         .anyRequest().authenticated()

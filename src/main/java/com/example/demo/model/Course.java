@@ -45,4 +45,6 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Lesson> lessons;
 
+    private String imageUrl;
+
 }

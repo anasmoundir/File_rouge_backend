@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.TeacherDTO;
+import com.example.demo.dto.TeacherRegistrationDTO;
+import com.example.demo.dto.TeacherRegistrationResponse;
 import com.example.demo.exception.TeacherNotFoundException;
 import com.example.demo.service.interfaces.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,14 @@ public class TeacherController {
     public ResponseEntity<List<TeacherDTO>> getAllTeachers() {
         List<TeacherDTO> teachers = teacherService.getAllTeachers();
         return ResponseEntity.ok(teachers);
+    }
+
+
+    @PostMapping("/register")
+    public ResponseEntity<TeacherRegistrationResponse> registerTeacher(@RequestBody TeacherRegistrationDTO teacherDTO) {
+        teacherService.registerTeacher(teacherDTO);
+        TeacherRegistrationResponse response = new TeacherRegistrationResponse("Teacher registered successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @ExceptionHandler(TeacherNotFoundException.class)
