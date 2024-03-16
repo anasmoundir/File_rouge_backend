@@ -21,7 +21,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_role_id")
     private UserRole userRole;
 
@@ -30,5 +30,15 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserDetail userDetail;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
+
 
 }

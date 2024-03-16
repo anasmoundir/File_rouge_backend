@@ -21,6 +21,8 @@
         @JoinColumn(name = "course_id")
         private Course course;
 
+        private String s3Url;
+
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "lesson_id")
         private Lesson lesson;

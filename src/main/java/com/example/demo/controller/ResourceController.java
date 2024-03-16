@@ -2,17 +2,24 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.ResourcesDTO;
 import com.example.demo.service.interfaces.ResourceService;
+import com.example.demo.service.interfaces.S3Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("api/resources")
 public class ResourceController {
     private final ResourceService resourceService;
+    private final S3Service s3Service;
 
-    public ResourceController(ResourceService resourceService) {
+    @Autowired
+    public ResourceController(ResourceService resourceService, S3Service s3Service) {
         this.resourceService = resourceService;
+        this.s3Service = s3Service;
     }
 
     @PostMapping
@@ -51,6 +58,29 @@ public class ResourceController {
             resourceService.deleteResource(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<ResourcesDTO> uploadResource(@RequestParam("file") MultipartFile file,
+                                                       @RequestParam("title") String title,
+                                                       @RequestParam("description") String description,
+                                                       @RequestParam("courseId") Long courseId,
+                                                       @RequestParam("lessonId") Long lessonId) {
+        try {
+            String s3Url = s3Service.uploadResourceFile(file);
+            ResourcesDTO resourcesDTO = new ResourcesDTO();
+            resourcesDTO.setTitle(title);
+            resourcesDTO.setDescription(description);
+            resourcesDTO.setUrl(s3Url);
+            resourcesDTO.setCourseId(courseId);
+            resourcesDTO.setLessonId(lessonId);
+
+            ResourcesDTO savedResourcesDTO = resourceService.createResource(resourcesDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedResourcesDTO);
+        } catch (IOException e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

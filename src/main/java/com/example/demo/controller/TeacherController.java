@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
+import com.example.demo.Mapper.TeacherMapper;
 import com.example.demo.dto.TeacherDTO;
 import com.example.demo.dto.TeacherRegistrationDTO;
 import com.example.demo.dto.TeacherRegistrationResponse;
 import com.example.demo.exception.TeacherNotFoundException;
+import com.example.demo.model.Teacher;
 import com.example.demo.service.interfaces.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,41 +13,33 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/teacher")
 public class TeacherController {
 
     private final TeacherService teacherService;
+    private final TeacherMapper teacherMapper;
 
     @Autowired
-    public TeacherController(TeacherService teacherService) {
+    public TeacherController(TeacherService teacherService,
+                             TeacherMapper teacherMapper) {
         this.teacherService = teacherService;
-    }
-
-    @PostMapping("/{teacherId}/validate")
-    public ResponseEntity<TeacherDTO> validateTeacher(@PathVariable Long teacherId) {
-        TeacherDTO validatedTeacher = teacherService.validateTeacher(teacherId, true);
-        return ResponseEntity.ok(validatedTeacher);
+        this.teacherMapper = teacherMapper;
     }
 
     @GetMapping
     public ResponseEntity<List<TeacherDTO>> getAllTeachers() {
-        List<TeacherDTO> teachers = teacherService.getAllTeachers();
-        return ResponseEntity.ok(teachers);
+        List<TeacherDTO> teacherDTOs = teacherService.getAllTeachers().stream().map(teacherMapper::teacherToTeacherDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(teacherDTOs);
     }
 
-
-    @PostMapping("/register")
-    public ResponseEntity<TeacherRegistrationResponse> registerTeacher(@RequestBody TeacherRegistrationDTO teacherDTO) {
-        teacherService.registerTeacher(teacherDTO);
-        TeacherRegistrationResponse response = new TeacherRegistrationResponse("Teacher registered successfully");
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @ExceptionHandler(TeacherNotFoundException.class)
-    public ResponseEntity<String> handleTeacherNotFoundException(TeacherNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    @PutMapping("/{teacherId}/approve")
+    public ResponseEntity<TeacherDTO> approveTeacher(@PathVariable Long teacherId) {
+        TeacherDTO approvedTeacher = teacherService.approveTeacher(teacherId);
+        return ResponseEntity.ok(approvedTeacher);
     }
 
 }

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -40,22 +40,26 @@ public class TeacherServiceImpl implements TeacherService {
         this.passwordEncoder = passwordEncoder;
     }
 
-        @Override
-        @Transactional
-        public TeacherDTO validateTeacher(Long teacherId, boolean approved) {
-            Teacher teacher = teacherRepository.findById(teacherId)
-                    .orElseThrow(() -> new TeacherNotFoundException("Teacher not found with id: " + teacherId));
-            teacher = teacherRepository.approveTeacher(teacherId);
-            return teacherMapper.teacherToTeacherDTO(teacher);
-        }
+    @Override
+    public List<Teacher> getAllTeachers() {
+        return teacherRepository.findAll();
+    }
 
-        @Override
-        public List<TeacherDTO> getAllTeachers() {
-            List<Teacher> teachers = teacherRepository.findAll();
-            return teachers.stream()
-                    .map(teacherMapper::teacherToTeacherDTO)
-                    .collect(Collectors.toList());
+    @Override
+    @Transactional
+    public TeacherDTO approveTeacher(Long teacherId) {
+        Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);
+        if (optionalTeacher.isPresent()) {
+            Teacher teacher = optionalTeacher.get();
+            teacher.setApproved(true);
+            return teacherMapper.teacherToTeacherDTO(teacherRepository.save(teacher));
+        } else {
+            throw new TeacherNotFoundException("Teacher not found with id: " + teacherId);
         }
+    }
+
+
+
 
     @Override
     @Transactional

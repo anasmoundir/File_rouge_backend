@@ -18,6 +18,9 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     @Query("UPDATE Teacher t SET t.approved = true WHERE t.id = :id")
     Teacher approveTeacher(@Param("id") Long id);
     Optional<Teacher> findById(Long id);
+
+    @Query("SELECT t FROM Teacher t JOIN FETCH t.user u JOIN FETCH u.userRole WHERE u.userRole.roleName = 'TEACHER'")
     List<Teacher> findAll();
+
 
 }

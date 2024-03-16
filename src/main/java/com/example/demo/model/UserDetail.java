@@ -18,4 +18,14 @@ public class UserDetail {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;;
+    @Override
+    public String toString() {
+        return "UserDetail{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+        ", address='" + address + '\'' +
+        ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
 }
