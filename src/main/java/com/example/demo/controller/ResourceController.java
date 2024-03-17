@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.ResourcesDTO;
+import com.example.demo.service.interfaces.AzureBlobStorageService;
 import com.example.demo.service.interfaces.ResourceService;
-import com.example.demo.service.interfaces.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +14,12 @@ import java.io.IOException;
 @RequestMapping("api/resources")
 public class ResourceController {
     private final ResourceService resourceService;
-    private final S3Service s3Service;
+    private final AzureBlobStorageService azureBlobStorageService;
 
     @Autowired
-    public ResourceController(ResourceService resourceService, S3Service s3Service) {
+    public ResourceController(ResourceService resourceService, AzureBlobStorageService azureBlobStorageService) {
         this.resourceService = resourceService;
-        this.s3Service = s3Service;
+        this.azureBlobStorageService = azureBlobStorageService;
     }
 
     @PostMapping
@@ -36,6 +36,10 @@ public class ResourceController {
     public ResponseEntity<ResourcesDTO> getResourceById(@PathVariable Long id) {
         try {
             ResourcesDTO resourcesDTO = resourceService.getResourceById(id);
+
+            String fileUrl = azureBlobStorageService.getFileUrl(resourcesDTO.getUrl());
+            resourcesDTO.setUrl(fileUrl);
+
             return ResponseEntity.ok(resourcesDTO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -62,6 +66,8 @@ public class ResourceController {
         }
     }
 
+
+
     @PostMapping("/upload")
     public ResponseEntity<ResourcesDTO> uploadResource(@RequestParam("file") MultipartFile file,
                                                        @RequestParam("title") String title,
@@ -69,11 +75,15 @@ public class ResourceController {
                                                        @RequestParam("courseId") Long courseId,
                                                        @RequestParam("lessonId") Long lessonId) {
         try {
-            String s3Url = s3Service.uploadResourceFile(file);
+            String fileName = azureBlobStorageService.uploadFile(file);
+
+            String publicUrl = azureBlobStorageService.getFileUrl(fileName);
+
+
             ResourcesDTO resourcesDTO = new ResourcesDTO();
             resourcesDTO.setTitle(title);
             resourcesDTO.setDescription(description);
-            resourcesDTO.setUrl(s3Url);
+            resourcesDTO.setUrl(publicUrl);
             resourcesDTO.setCourseId(courseId);
             resourcesDTO.setLessonId(lessonId);
 

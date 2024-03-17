@@ -43,6 +43,7 @@ public class SecurityConfig
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll().requestMatchers("api/teacher/register").permitAll()
+                        .requestMatchers("/api/resources/upload").permitAll()
                         .requestMatchers("/api/Teacher/**").hasAuthority("TEACHER")
                         .requestMatchers("/api/Admin/**").hasAuthority("JURY")
                         .anyRequest().authenticated()

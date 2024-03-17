@@ -7,6 +7,7 @@
     public class Resources {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "resource_id")
         private Long resourceId;
 
         @Column(nullable = false)
@@ -21,7 +22,7 @@
         @JoinColumn(name = "course_id")
         private Course course;
 
-        private String s3Url;
+        private String AzurBlobUrl;
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "lesson_id")

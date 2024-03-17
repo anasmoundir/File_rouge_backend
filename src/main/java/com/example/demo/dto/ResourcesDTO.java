@@ -10,5 +10,6 @@ public class ResourcesDTO {
     private String title;
     private String description;
     private String url;
+    private Long lessonId;
     private Long courseId;
 }

@@ -97,10 +97,10 @@
             <version>0.11.5</version>
         </dependency>
         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk</artifactId>
-            <version>1.12.681</version>
-        </dependency>
+        <groupId>com.azure</groupId>
+        <artifactId>azure-storage-blob</artifactId>
+        <version>12.25.2</version>
+    </dependency>
 
 
     </dependencies>
