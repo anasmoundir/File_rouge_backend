@@ -20,7 +20,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public ResourcesDTO createResource(ResourcesDTO resourcesDTO) {
-        Resources resources = (Resources) resourceMapper.resourceDTOToResource(resourcesDTO);
+        Resources resources =  resourceMapper.resourceDTOToResource(resourcesDTO);
         resources = resourceRepository.save(resources);
         return resourceMapper.resourceToResourceDTO(resources);
     }

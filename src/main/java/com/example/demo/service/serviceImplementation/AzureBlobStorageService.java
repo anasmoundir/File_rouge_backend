@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.UUID;
 
 @Service
@@ -16,6 +18,7 @@ public class AzureBlobStorageService implements com.example.demo.service.interfa
     @Autowired
     private BlobServiceClient blobServiceClient;
 
+    private String containerName = "rssourceslessons" ;
 
 
     @Override
@@ -44,10 +47,11 @@ public class AzureBlobStorageService implements com.example.demo.service.interfa
     public String getFileUrl(String fileName) {
         return generateBlobUrl(fileName);
     }
-
     @Override
     public String generateBlobUrl(String fileName) {
-        return blobServiceClient.getBlobContainerClient(containerName).getBlobClient(fileName).getBlobUrl();
+        String blobUrl = "https://filerouge.blob.core.windows.net/" + containerName + "/" + fileName;
+        System.out.println("Generated Blob URL: " + blobUrl);
+        return blobUrl;
     }
 
 
@@ -56,4 +60,27 @@ public class AzureBlobStorageService implements com.example.demo.service.interfa
         String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
         return uniqueFileName + fileExtension;
     }
+
+    @Override
+    public InputStream streamFileByUrl(String fileUrl, OutputStream outputStream) throws IOException {
+        BlobClient blobClient = getBlobClientFromUrl(fileUrl);
+        return blobClient.openInputStream();
+    }
+    private BlobClient getBlobClientFromUrl(String fileUrl) {
+        String blobName = extractBlobNameFromUrl(fileUrl);
+        return blobServiceClient.getBlobContainerClient(containerName).getBlobClient(blobName);
+    }
+
+
+    private String extractBlobNameFromUrl(String fileUrl) {
+        String[] parts = fileUrl.split("/");
+        return parts[parts.length - 1];
+    }
+
+    @Override
+    public void streamFile(String fileName, OutputStream outputStream) throws IOException {
+        BlobClient blobClient = blobServiceClient.getBlobContainerClient(containerName).getBlobClient(fileName);
+        blobClient.download(outputStream);
+    }
+
 }
