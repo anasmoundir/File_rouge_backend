@@ -18,7 +18,6 @@ public class AzureBlobStorageService implements com.example.demo.service.interfa
     @Autowired
     private BlobServiceClient blobServiceClient;
 
-    private String containerName = "rssourceslessons" ;
 
 
     @Override
