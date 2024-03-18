@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Subcategory;
+import com.example.demo.dto.SubcategoryDTO;
+import com.example.demo.exception.SubcategoryNotFoundException;
 import com.example.demo.service.interfaces.SubcategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,39 +21,42 @@ public class SubcategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Subcategory>> getAllSubcategories() {
+    public ResponseEntity<List<SubcategoryDTO>> getAllSubcategories() {
         try {
-            List<Subcategory> subcategories = subcategoryService.getAllSubcategories();
-            return ResponseEntity.ok().body(subcategories);
+            List<SubcategoryDTO> subcategories = subcategoryService.getAllSubcategories();
+            return ResponseEntity.ok(subcategories);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Subcategory> getSubcategoryById(@PathVariable Long id) {
+    public ResponseEntity<SubcategoryDTO> getSubcategoryById(@PathVariable Long id) {
         try {
-            Subcategory subcategory = subcategoryService.getSubcategoryById(id);
-            return ResponseEntity.ok().body(subcategory);
+            SubcategoryDTO subcategory = subcategoryService.getSubcategoryById(id);
+            return ResponseEntity.ok(subcategory);
+        } catch (SubcategoryNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<Subcategory>> getSubcategoriesByCategoryId(@PathVariable Long categoryId) {
+    public ResponseEntity<List<SubcategoryDTO>> getSubcategoriesByCategoryId(@PathVariable Long categoryId) {
         try {
-            List<Subcategory> subcategories = subcategoryService.getSubcategoriesByCategoryId(categoryId);
-            return ResponseEntity.ok().body(subcategories);
+            List<SubcategoryDTO> subcategories = subcategoryService.getSubcategoriesByCategoryId(categoryId);
+            return ResponseEntity.ok(subcategories);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<Subcategory> createSubcategory(@RequestBody Subcategory subcategory) {
+    public ResponseEntity<SubcategoryDTO> createSubcategory(@RequestBody SubcategoryDTO subcategoryDTO) {
         try {
-            Subcategory createdSubcategory = subcategoryService.createSubcategory(subcategory);
+
+            SubcategoryDTO createdSubcategory = subcategoryService.createSubcategory(subcategoryDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdSubcategory);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -60,10 +64,12 @@ public class SubcategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Subcategory> updateSubcategory(@PathVariable Long id, @RequestBody Subcategory subcategory) {
+    public ResponseEntity<SubcategoryDTO> updateSubcategory(@PathVariable Long id, @RequestBody SubcategoryDTO subcategoryDTO) {
         try {
-            Subcategory updatedSubcategory = subcategoryService.updateSubcategory(id, subcategory);
-            return ResponseEntity.ok().body(updatedSubcategory);
+            SubcategoryDTO updatedSubcategory = subcategoryService.updateSubcategory(id, subcategoryDTO);
+            return ResponseEntity.ok(updatedSubcategory);
+        } catch (SubcategoryNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -74,6 +80,8 @@ public class SubcategoryController {
         try {
             subcategoryService.deleteSubcategory(id);
             return ResponseEntity.noContent().build();
+        } catch (SubcategoryNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+# Ignore AzureStorageConfig.java
+com/example/demo/security/config/CorsConfig/AzureStorageConfig.java

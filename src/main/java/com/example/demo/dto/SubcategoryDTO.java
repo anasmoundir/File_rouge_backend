@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SubcategoryDTO {
+    private Long id;
     private String name;
-    private Long categoryId;
+    private CategoryDTO category;
 }

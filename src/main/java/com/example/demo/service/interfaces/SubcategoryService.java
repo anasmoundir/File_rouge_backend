@@ -1,19 +1,20 @@
 package com.example.demo.service.interfaces;
 
+import com.example.demo.dto.SubcategoryDTO;
 import com.example.demo.model.Subcategory;
 
 import java.util.List;
 
 public interface SubcategoryService {
-    List<Subcategory> getAllSubcategories();
+    List<SubcategoryDTO> getAllSubcategories();
 
-    Subcategory getSubcategoryById(Long id);
+    SubcategoryDTO getSubcategoryById(Long id);
 
-    List<Subcategory> getSubcategoriesByCategoryId(Long categoryId);
+    List<SubcategoryDTO> getSubcategoriesByCategoryId(Long categoryId);
 
-    Subcategory createSubcategory(Subcategory subcategory);
+    SubcategoryDTO createSubcategory(SubcategoryDTO subcategoryDTO);
 
-    Subcategory updateSubcategory(Long id, Subcategory newSubcategory);
+    SubcategoryDTO updateSubcategory(Long id, SubcategoryDTO subcategoryDTO);
 
     void deleteSubcategory(Long id);
 }
