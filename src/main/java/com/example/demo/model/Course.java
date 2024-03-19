@@ -13,22 +13,17 @@ import java.util.List;
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "course_id")
     private Long courseId;
 
     @Column(nullable = false)
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @Column(name = "subcategory_id", nullable = false)
+    private Long subcategoryId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subcategory_id")
-    private Subcategory subcategory;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "instructor_id")
-    private Teacher instructor;
+    @Column(name = "instructor_id", nullable = false)
+    private Long instructorId;
 
     private String description;
 
@@ -45,4 +40,9 @@ public class Course {
     private List<Resources> resources;
 
     private String imageUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
+
 }

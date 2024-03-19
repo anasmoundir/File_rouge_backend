@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <!-- ChangeSet to drop the foreign key constraint -->
+    <changeSet id="dropForeignKeyConstraint" author="anas">
+        <dropForeignKeyConstraint constraintName="FK_ENROLLMENTS_ON_COURSE" baseTableName="course"/>
+    </changeSet>
+
+    <!-- ChangeSet to modify the column to auto-increment -->
+    <changeSet id="modifyCourseIdColumn" author="your_name">
+        <modifyDataType columnName="course_id"
+                        newDataType="BIGINT AUTO_INCREMENT"
+                        tableName="course"/>
+    </changeSet>
+
+    <!-- ChangeSet to add the foreign key constraint back -->
+    <changeSet id="addForeignKeyConstraint" author="your_name">
+        <addForeignKeyConstraint baseColumnNames="course_id"
+                                 baseTableName="course"
+                                 constraintName="FK_ENROLLMENTS_ON_COURSE"
+                                 referencedColumnNames="course_id"
+                                 referencedTableName="enrollments"/>
+    </changeSet>
+
+</databaseChangeLog>

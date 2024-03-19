@@ -11,10 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface RegistrationService {
 
 
-    @Transactional
-    void register(UserTeacherRequest request);
-
-    Long registerUser(SignUpDTO signUpDTO, UserRole userRole);
+    User registerUser(SignUpDTO signUpDTO, UserRole userRole);
 
     boolean activateUser(String username);
 
@@ -22,5 +19,5 @@ public interface RegistrationService {
 
     UserRole determineUserRole(TeacherDTO teacherDTO);
 
-    void registerTeacher(TeacherDTO teacherDTO, Long userId);
+    void registerTeacher(UserTeacherRequest request);
 }

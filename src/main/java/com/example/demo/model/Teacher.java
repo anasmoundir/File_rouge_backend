@@ -27,7 +27,5 @@ public class Teacher {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Course> courses;
 }
 

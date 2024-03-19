@@ -3,6 +3,9 @@ package com.example.demo.controller;
 import com.example.demo.Mapper.TeacherMapper;
 import com.example.demo.Mapper.userMapper;
 import com.example.demo.dto.SignUpDTO;
+import com.example.demo.dto.UserTeacherRequest;
+import com.example.demo.model.Teacher;
+import com.example.demo.model.User;
 import com.example.demo.model.UserRole;
 import com.example.demo.repository.UserRoleRepository;
 import com.example.demo.service.interfaces.RegistrationService;
@@ -32,26 +35,21 @@ public class RegistrationController {
         this.usermapper = usermapper;
         this.userRoleRepository = userRoleRepository;
     }
-//    @PostMapping("/Teacher")
-//    public ResponseEntity<String> registerUserAndTeacher(@RequestBody UserTeacherRequest request) {
-//        try {
-//            User user = usermapper.signUpDTOToUser(request.getUser());
-//            if (request.getTeacher() != null) {
-//                Teacher teacher = teacherMapper.teacherDTOToTeacher(request.getTeacher());
-//                user.setTeacher(teacher);
-//            }
-//            registrationService.register(user);
-//            return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully.");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error registering user: " + e.getMessage());
-//        }
-//    }
+    @PostMapping("/Teacher")
+    public ResponseEntity<String> registerUserAndTeacher(@RequestBody UserTeacherRequest request) {
+        try {
+            registrationService.registerTeacher(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body("User and Teacher registered successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error registering user and teacher: " + e.getMessage());
+        }
+    }
 
     @PostMapping("/User")
     public ResponseEntity<String> registerUser(@RequestBody SignUpDTO user) {
         try {
             UserRole userRole = userRoleRepository.findByRoleName("STUDENT");
-            Long savedUserDTO = registrationService.registerUser(user, userRole);
+            User savedUserDTO = registrationService.registerUser(user, userRole);
             return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully. User ID: " + savedUserDTO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error registering user: " + e.getMessage());

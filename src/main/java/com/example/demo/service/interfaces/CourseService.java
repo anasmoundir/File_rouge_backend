@@ -6,8 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface CourseService {
+
+
     @Transactional
-    CourseDTO createCourse(CourseDTO courseDTO, Long categoryId, Long subcategoryId, Long instructorId);
+    CourseDTO createCourse(CourseDTO courseDTO);
 
     @Transactional(readOnly = true)
     CourseDTO getCourseById(Long id);
@@ -21,11 +23,11 @@ public interface CourseService {
     @Transactional(readOnly = true)
     List<CourseDTO> getAllCourses();
 
-    @Transactional(readOnly = true)
-    List<CourseDTO> getCoursesByCategory(Long categoryId);
+
 
     @Transactional(readOnly = true)
     List<CourseDTO> getCoursesBySubcategory(Long subcategoryId);
+
 
     @Transactional(readOnly = true)
     List<CourseDTO> getCoursesByInstructor(Long instructorId);

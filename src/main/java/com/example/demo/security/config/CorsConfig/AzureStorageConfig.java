@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AzureStorageConfig {
-
     @Bean
     public BlobServiceClient blobServiceClient() {
         return new BlobServiceClientBuilder().connectionString(connectionString).buildClient();

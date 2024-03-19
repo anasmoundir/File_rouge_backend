@@ -17,8 +17,6 @@ public interface CourseMapper {
 
     Course courseDTOToCourse(CourseDTO courseDTO);
 
-    UserDTO userToUserDTO(User instructor);
-
     Lesson lessonDTOToLesson(LessonDTO lessonDTO);
 
     Resources resourceDTOToResource(ResourcesDTO resourceDTO);

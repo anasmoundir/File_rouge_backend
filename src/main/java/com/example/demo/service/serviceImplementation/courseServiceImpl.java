@@ -43,23 +43,18 @@ public class courseServiceImpl  implements CourseService {
 
 
     @Override
-     @Transactional
-    public CourseDTO createCourse(CourseDTO courseDTO, Long categoryId, Long subcategoryId, Long instructorId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + categoryId));
-
-        Subcategory subcategory = subcategoryRepository.findById(subcategoryId)
-                .orElseThrow(() -> new SubcategoryNotFoundException("Subcategory not found with id: " + subcategoryId));
-
-        Teacher instructor = teacherRepository.findById(instructorId)
-                .orElseThrow(() -> new TeacherNotFoundException("Instructor not found with id: " + instructorId));
+    @Transactional
+    public CourseDTO createCourse(CourseDTO courseDTO) {
+        Long subcategoryId = courseDTO.getSubcategoryId();
+        Long instructorId = courseDTO.getInstructorId();
 
         Course course = courseMapper.courseDTOToCourse(courseDTO);
-        course.setCategory(category);
-        course.setSubcategory(subcategory);
-        course.setInstructor(instructor);
+        course.setSubcategoryId(subcategoryId);
+        course.setInstructorId(instructorId);
+
         return courseMapper.courseToCourseDTO(courseRepository.save(course));
     }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -100,17 +95,7 @@ public class courseServiceImpl  implements CourseService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<CourseDTO> getCoursesByCategory(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + categoryId));
 
-        List<Course> courses = courseRepository.findByCategory(category);
-        return courses.stream()
-                .map(courseMapper::courseToCourseDTO)
-                .collect(Collectors.toList());
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -184,19 +169,17 @@ public class courseServiceImpl  implements CourseService {
         List<Course> courses;
 
         if (title != null && categoryId != null && instructorId != null) {
-            courses = courseRepository.findByTitleContainingAndCategoryIdAndInstructorId(title, categoryId, instructorId);
+            courses = courseRepository.findByTitleContainingAndSubcategory_CategoryIdAndInstructor_Id(title, categoryId, instructorId);
         } else if (title != null && categoryId != null) {
-            courses = courseRepository.findByTitleContainingAndCategoryId(title, categoryId);
+            courses = courseRepository.findByTitleContainingAndSubcategory_Id(title, categoryId);
         } else if (title != null && instructorId != null) {
-            courses = courseRepository.findByTitleContainingAndInstructorId(title, instructorId);
+            courses = courseRepository.findByTitleContainingAndInstructor_Id(title, instructorId);
         } else if (categoryId != null && instructorId != null) {
-            courses = courseRepository.findByCategoryIdAndInstructorId(categoryId, instructorId);
+            courses = courseRepository.findByInstructor_Id(instructorId);
         } else if (title != null) {
             courses = courseRepository.findByTitleContaining(title);
         } else if (categoryId != null) {
-            courses = courseRepository.findByCategoryId(categoryId);
-        } else if (instructorId != null) {
-            courses = courseRepository.findByInstructorId(instructorId);
+            courses = courseRepository.findBySubcategory_CategoryId(categoryId);
         } else {
             courses = courseRepository.findAll();
         }
@@ -204,5 +187,6 @@ public class courseServiceImpl  implements CourseService {
                 .map(courseMapper::courseToCourseDTO)
                 .collect(Collectors.toList());
     }
+
 
 }

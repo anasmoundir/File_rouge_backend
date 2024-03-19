@@ -15,9 +15,6 @@
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.stereotype.Service;
-    import org.springframework.transaction.annotation.Transactional;
-
-    import static com.example.demo.security.config.SecurityConfig.passwordEncoder;
 
     @Service
     public class RegistrationServiceImpl implements RegistrationService {
@@ -42,21 +39,21 @@
         }
 
 
-        @Override
-        @Transactional
-        public void register(UserTeacherRequest request) {
-            SignUpDTO signUpDTO = request.getUser();
-            TeacherDTO teacherDTO = request.getTeacher();
-            UserRole userRole = determineUserRole(teacherDTO);
-            Long userId = registerUser(signUpDTO, userRole);
+//        @Override
+//        @Transactional
+//        public void register(UserTeacherRequest request) {
+//            SignUpDTO signUpDTO = request.getUser();
+//            TeacherDTO teacherDTO = request.getTeacher();
+//            UserRole userRole = determineUserRole(teacherDTO);
+//            Long userId = registerUser(signUpDTO, userRole);
+//
+//            if (teacherDTO != null) {
+//                registerTeacher(teacherDTO, userId);
+//            }
+//        }
 
-            if (teacherDTO != null) {
-                registerTeacher(teacherDTO, userId);
-            }
-        }
-
         @Override
-        public Long registerUser(SignUpDTO signUpDTO, UserRole userRole) {
+        public User registerUser(SignUpDTO signUpDTO, UserRole userRole) {
             if (userRepository.existsByUsername(signUpDTO.getUsername())) {
                 throw new RuntimeException("Username already exists");
             }
@@ -67,13 +64,7 @@
             user.setUserRole(userRole);
             user.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));
             User savedUser = userRepository.save(user);
-            if (userRole.getRoleName().equals("TEACHER")) {
-                Teacher teacher = new Teacher();
-                teacher.setUser(savedUser);
-                teacherRepository.save(teacher);
-            }
-
-            return savedUser.getUserId();
+            return savedUser;
         }
 
         @Override
@@ -105,13 +96,18 @@
         }
 
         @Override
-        public void registerTeacher(TeacherDTO teacherDTO, Long userId) {
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+        public void registerTeacher(UserTeacherRequest request) {
 
+//                User newUser = new User();
+//                newUser.setUsername(request.getUser().getUsername());
+//                newUser.setPassword(request.getUser().getPassword());
+//                newUser.setEmail(request.getUser().getEmail());
+//                newUser.setEnabled(true);
+            User  savedUser = registerUser(request.getUser(), userRoleRepository.findByRoleName("TEACHER"));
+            TeacherDTO teacherDTO = request.getTeacher();
             Teacher teacher = teacherMapper.teacherDTOToTeacher(teacherDTO);
-            teacher.setUser(user);
-
+            teacher.setUser(savedUser);
             teacherRepository.save(teacher);
         }
+
     }
