@@ -6,7 +6,6 @@ import java.util.List;
 
 @Entity
 @Data
-
 public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,9 +23,4 @@ public class Lesson {
 
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Resources> resources;
-
-    public Long getLessonId() {
-        return lessonId;
-    }
-
 }

@@ -27,6 +27,7 @@ public class SubcategoryServiceImpl implements SubcategoryService {
     @Override
     public List<SubcategoryDTO> getAllSubcategories() {
         List<Subcategory> subcategories = subcategoryRepository.findAll();
+
         return subcategories.stream()
                 .map(subcategoryMapper::subcategoryToSubcategoryDTO)
                 .collect(Collectors.toList());
@@ -50,7 +51,6 @@ public class SubcategoryServiceImpl implements SubcategoryService {
     @Override
     public SubcategoryDTO createSubcategory(SubcategoryDTO subcategoryDTO) {
         Subcategory subcategory = subcategoryMapper.subcategoryDTOToSubcategory(subcategoryDTO);
-        System.out.println(subcategoryDTO.getCategory()   + " " + subcategoryDTO.getName());
         Subcategory savedSubcategory = subcategoryRepository.save(subcategory);
         return subcategoryMapper.subcategoryToSubcategoryDTO(savedSubcategory);
     }

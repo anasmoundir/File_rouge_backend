@@ -15,75 +15,37 @@ import java.util.List;
 public class SubcategoryController {
     private final SubcategoryService subcategoryService;
 
-    @Autowired
     public SubcategoryController(SubcategoryService subcategoryService) {
         this.subcategoryService = subcategoryService;
     }
 
     @GetMapping
     public ResponseEntity<List<SubcategoryDTO>> getAllSubcategories() {
-        try {
-            List<SubcategoryDTO> subcategories = subcategoryService.getAllSubcategories();
-            return ResponseEntity.ok(subcategories);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<SubcategoryDTO> subcategories = subcategoryService.getAllSubcategories();
+        return ResponseEntity.ok(subcategories);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<SubcategoryDTO> getSubcategoryById(@PathVariable Long id) {
-        try {
-            SubcategoryDTO subcategory = subcategoryService.getSubcategoryById(id);
-            return ResponseEntity.ok(subcategory);
-        } catch (SubcategoryNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<SubcategoryDTO>> getSubcategoriesByCategoryId(@PathVariable Long categoryId) {
-        try {
-            List<SubcategoryDTO> subcategories = subcategoryService.getSubcategoriesByCategoryId(categoryId);
-            return ResponseEntity.ok(subcategories);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        SubcategoryDTO subcategory = subcategoryService.getSubcategoryById(id);
+        return ResponseEntity.ok(subcategory);
     }
 
     @PostMapping
     public ResponseEntity<SubcategoryDTO> createSubcategory(@RequestBody SubcategoryDTO subcategoryDTO) {
-        try {
-
-            SubcategoryDTO createdSubcategory = subcategoryService.createSubcategory(subcategoryDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdSubcategory);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        SubcategoryDTO createdSubcategory = subcategoryService.createSubcategory(subcategoryDTO);
+        return new ResponseEntity<>(createdSubcategory, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<SubcategoryDTO> updateSubcategory(@PathVariable Long id, @RequestBody SubcategoryDTO subcategoryDTO) {
-        try {
-            SubcategoryDTO updatedSubcategory = subcategoryService.updateSubcategory(id, subcategoryDTO);
-            return ResponseEntity.ok(updatedSubcategory);
-        } catch (SubcategoryNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        SubcategoryDTO updatedSubcategory = subcategoryService.updateSubcategory(id, subcategoryDTO);
+        return ResponseEntity.ok(updatedSubcategory);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSubcategory(@PathVariable Long id) {
-        try {
-            subcategoryService.deleteSubcategory(id);
-            return ResponseEntity.noContent().build();
-        } catch (SubcategoryNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        subcategoryService.deleteSubcategory(id);
+        return ResponseEntity.ok().build();
     }
 }

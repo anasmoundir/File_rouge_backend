@@ -1,30 +1,28 @@
-    package com.example.demo.model;
-    import jakarta.persistence.*;
-    import lombok.Data;
+        package com.example.demo.model;
+        import jakarta.persistence.*;
+        import lombok.Data;
 
-    @Entity
-    @Data
-    public class Resources {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "resource_id")
-        private Long resourceId;
+        @Entity
+        @Data
+        public class Resources {
+            @Id
+            @GeneratedValue(strategy = GenerationType.IDENTITY)
+            @Column(name = "resource_id")
+            private Long resourceId;
 
-        @Column(nullable = false)
-        private String title;
+            @Column(nullable = false)
+            private String title;
 
-        private String description;
+            private String description;
 
-        @Column(nullable = false)
-        private String url;
+            @Column(nullable = false)
+            private String url;
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "course_id")
-        private Course course;
+            @ManyToOne(fetch = FetchType.LAZY)
+            @JoinColumn(name = "course_id")
+            private Course course;
 
-        private String AzurBlobUrl;
-
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "lesson_id")
-        private Lesson lesson;
-    }
+            @ManyToOne(fetch = FetchType.LAZY)
+            @JoinColumn(name = "lesson_id")
+            private Lesson lesson;
+        }

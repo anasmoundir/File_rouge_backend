@@ -1,16 +1,11 @@
 package com.example.demo.service.serviceImplementation;
 
 import com.example.demo.Mapper.CourseMapper;
-import com.example.demo.dto.CourseDTO;
-import com.example.demo.dto.LessonDTO;
-import com.example.demo.dto.ResourcesDTO;
-import com.example.demo.dto.UserDTO;
+import com.example.demo.Mapper.TeacherMapper;
+import com.example.demo.dto.*;
 import com.example.demo.exception.*;
 import com.example.demo.model.*;
-import com.example.demo.repository.CategoryRepository;
-import com.example.demo.repository.CourseRepository;
-import com.example.demo.repository.SubcategoryRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.*;
 import com.example.demo.service.interfaces.CourseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,17 +21,24 @@ public class courseServiceImpl  implements CourseService {
     private final SubcategoryRepository subcategoryRepository;
     private final UserRepository userRepository;
     private final CourseMapper courseMapper;
+    private final TeacherRepository teacherRepository;
+
+    private final TeacherMapper teacherMapper;
 
     public courseServiceImpl(CourseRepository courseRepository,
                              CategoryRepository categoryRepository,
                              SubcategoryRepository subcategoryRepository,
                              UserRepository userRepository,
-                             CourseMapper courseMapper) {
+                             CourseMapper courseMapper,
+                             TeacherRepository teacherRepository,
+                             TeacherMapper teacherMapper) {
         this.courseRepository = courseRepository;
         this.categoryRepository = categoryRepository;
         this.subcategoryRepository = subcategoryRepository;
         this.userRepository = userRepository;
         this.courseMapper = courseMapper;
+        this.teacherRepository = teacherRepository;
+        this.teacherMapper = teacherMapper;
     }
 
 
@@ -49,8 +51,8 @@ public class courseServiceImpl  implements CourseService {
         Subcategory subcategory = subcategoryRepository.findById(subcategoryId)
                 .orElseThrow(() -> new SubcategoryNotFoundException("Subcategory not found with id: " + subcategoryId));
 
-        User instructor = userRepository.findById(instructorId)
-                .orElseThrow(() -> new UserNotFoundException("Instructor not found with id: " + instructorId));
+        Teacher instructor = teacherRepository.findById(instructorId)
+                .orElseThrow(() -> new TeacherNotFoundException("Instructor not found with id: " + instructorId));
 
         Course course = courseMapper.courseDTOToCourse(courseDTO);
         course.setCategory(category);
@@ -134,14 +136,8 @@ public class courseServiceImpl  implements CourseService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public UserDTO getInstructorOfCourse(Long courseId) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new CourseNotFoundException("Course not found with id: " + courseId));
-        User instructor = course.getInstructor();
-        return courseMapper.userToUserDTO(instructor);
-    }
+
+
 
     @Override
     @Transactional

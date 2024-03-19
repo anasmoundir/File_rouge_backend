@@ -61,13 +61,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional(readOnly = true)
     public List<CategoryDTO> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
-        System.out.println("Categories found: " + categories.size());
+
         List<CategoryDTO> categoryDTOs = categories.stream()
                 .map(categoryMapper::categoryToCategoryDTO)
                 .collect(Collectors.toList());
-
-
-
         return categoryDTOs;
     }
 }
