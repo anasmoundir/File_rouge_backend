@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.CourseDTO;
 import com.example.demo.dto.LessonDTO;
+import com.example.demo.service.interfaces.CourseService;
 import com.example.demo.service.interfaces.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,21 +16,28 @@ import java.util.List;
 public class LessonController {
 
     private final LessonService lessonService;
-
+    private CourseService courseService;
     @Autowired
-    public LessonController(LessonService lessonService) {
+    public LessonController(LessonService lessonService, CourseService courseService) {
         this.lessonService = lessonService;
+        this.courseService = courseService;
     }
 
-    @PostMapping
-    public ResponseEntity<?> createLesson(@RequestBody LessonDTO lessonDTO) {
+
+    @PostMapping("/{courseId}/lessons")
+    public ResponseEntity<?> AddLessonTocourse(@PathVariable Long courseId, @RequestBody LessonDTO lessonDTO) {
         try {
-            LessonDTO createdLesson = lessonService.createLesson(lessonDTO);
+            LessonDTO createdLesson = lessonService.createLesson(courseId, lessonDTO);
+
+            Long lessonId = createdLesson.getLessonId();
+
             return ResponseEntity.status(HttpStatus.CREATED).body(createdLesson);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating lesson: " + e.getMessage());
+            String errorMessage = "Error adding lesson to course: " + e.getMessage();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getLessonById(@PathVariable Long id) {

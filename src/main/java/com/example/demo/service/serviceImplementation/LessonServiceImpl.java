@@ -3,9 +3,12 @@ package com.example.demo.service.serviceImplementation;
 import com.example.demo.Mapper.LessonMapper;
 import com.example.demo.dto.LessonDTO;
 import com.example.demo.exception.LessonNotFoundException;
+import com.example.demo.model.Course;
 import com.example.demo.model.Lesson;
+import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.LessonRepository;
 import com.example.demo.service.interfaces.LessonService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,17 +20,26 @@ public class LessonServiceImpl implements LessonService {
     private final LessonRepository lessonRepository;
     private final LessonMapper lessonMapper;
 
+    private final CourseRepository courseRepository;
+
     @Autowired
-    public LessonServiceImpl(LessonRepository lessonRepository, LessonMapper lessonMapper) {
+    public LessonServiceImpl(LessonRepository lessonRepository, LessonMapper lessonMapper,CourseRepository courseRepository) {
         this.lessonRepository = lessonRepository;
         this.lessonMapper = lessonMapper;
+        this.courseRepository = courseRepository;
     }
 
+
     @Override
-    @Transactional
-    public LessonDTO createLesson(LessonDTO lessonDTO) {
-        Lesson lesson = lessonMapper.lessonDTOToLesson(lessonDTO);
+    public LessonDTO createLesson(Long courseId, LessonDTO lessonDTO) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found with ID: " + courseId));
+        Lesson lesson = new Lesson();
+        lesson.setTitle(lessonDTO.getTitle());
+        lesson.setContent(lessonDTO.getContent());
+        lesson.setCourse(course);
         Lesson savedLesson = lessonRepository.save(lesson);
+
         return lessonMapper.lessonToLessonDTO(savedLesson);
     }
 

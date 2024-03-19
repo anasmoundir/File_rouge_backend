@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class CourseDTO {
+    private Long courseId;
     private String title;
     private Long subcategoryId;
     private Long instructorId;

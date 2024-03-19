@@ -121,9 +121,6 @@ public class courseServiceImpl  implements CourseService {
                 .collect(Collectors.toList());
     }
 
-
-
-
     @Override
     @Transactional
     public CourseDTO addLessonToCourse(Long courseId, LessonDTO lessonDTO) {

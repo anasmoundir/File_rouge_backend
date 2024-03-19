@@ -5,7 +5,9 @@ import com.example.demo.dto.LessonDTO;
 import java.util.List;
 
 public interface LessonService {
-    LessonDTO createLesson(LessonDTO lessonDTO);
+
+    LessonDTO createLesson(Long courseId, LessonDTO lessonDTO);
+
     LessonDTO getLessonById(Long id);
     LessonDTO updateLesson(Long id, LessonDTO lessonDTO);
     void deleteLesson(Long id);
