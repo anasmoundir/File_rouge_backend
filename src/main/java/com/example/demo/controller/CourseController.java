@@ -51,8 +51,6 @@ public class CourseController {
     }
 
 
-
-
     @PutMapping("/{id}")
     public ResponseEntity<CourseDTO> updateCourse(@PathVariable Long id,
                                                   @RequestBody CourseDTO courseDTO) {

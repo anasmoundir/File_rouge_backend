@@ -1,6 +1,8 @@
 package com.example.demo.service.serviceImplementation;
 
 import com.example.demo.Mapper.CourseMapper;
+import com.example.demo.Mapper.LessonMapper;
+import com.example.demo.Mapper.ResourceMapper;
 import com.example.demo.Mapper.TeacherMapper;
 import com.example.demo.dto.*;
 import com.example.demo.exception.*;
@@ -27,14 +29,22 @@ public class courseServiceImpl  implements CourseService {
 
     private final TeacherMapper teacherMapper;
 
+    private  final ResourceMapper ressourceMapper;
+
+    private  final LessonMapper lessonMapper;
+
     public courseServiceImpl(CourseRepository courseRepository,
                              CategoryRepository categoryRepository,
                              SubcategoryRepository subcategoryRepository,
                              UserRepository userRepository,
                              CourseMapper courseMapper,
                              TeacherRepository teacherRepository,
-                             TeacherMapper teacherMapper) {
+                             TeacherMapper teacherMapper,
+                             LessonMapper lessonMapper,
+                             ResourceMapper ressourceMapper) {
         this.courseRepository = courseRepository;
+        this.ressourceMapper = ressourceMapper;
+        this.lessonMapper = lessonMapper;
         this.categoryRepository = categoryRepository;
         this.subcategoryRepository = subcategoryRepository;
         this.userRepository = userRepository;
@@ -150,7 +160,7 @@ public class courseServiceImpl  implements CourseService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new CourseNotFoundException("Course not found with id: " + courseId));
 
-        Lesson lesson = courseMapper.lessonDTOToLesson(lessonDTO);
+        Lesson lesson = lessonMapper.lessonDTOToLesson(lessonDTO);
         lesson.setCourse(course);
         course.getLessons().add(lesson);
 
@@ -173,7 +183,7 @@ public class courseServiceImpl  implements CourseService {
 
         List<Resources> resources = resourceDTOs.stream()
                 .map(resourceDTO -> {
-                    Resources resource = courseMapper.resourceDTOToResource(resourceDTO);
+                    Resources resource = ressourceMapper.resourceDTOToResource(resourceDTO);
                     resource.setLesson(lesson);
                     return resource;
                 })
