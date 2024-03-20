@@ -17,6 +17,16 @@ public class CourseController {
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
     }
+        @GetMapping("/instructor")
+    public ResponseEntity<List<CourseDTO>> getCoursesOfTheCurrentTeacher()
+    {
+        try {
+            List<CourseDTO> courses = courseService.getCoursesOfTheCurrentTeacher();
+            return ResponseEntity.ok(courses);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @PostMapping()
     public ResponseEntity<?> createCourse(@RequestBody CourseDTO courseDTO) {
@@ -29,6 +39,7 @@ public class CourseController {
         }
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<CourseDTO> getCourseById(@PathVariable Long id) {
         try {
@@ -38,6 +49,9 @@ public class CourseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<CourseDTO> updateCourse(@PathVariable Long id,

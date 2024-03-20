@@ -32,6 +32,9 @@ public interface CourseService {
     @Transactional(readOnly = true)
     List<CourseDTO> getCoursesByInstructor(Long instructorId);
 
+    @Transactional(readOnly = true)
+    List<CourseDTO> getCoursesOfTheCurrentTeacher();
+
     @Transactional
     CourseDTO addLessonToCourse(Long courseId, LessonDTO lessonDTO);
 

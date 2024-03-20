@@ -1,6 +1,7 @@
 package com.example.demo.service.interfaces;
 
 import com.example.demo.dto.LessonDTO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,4 +17,8 @@ public interface LessonService {
     List<LessonDTO> getLessonsByCategoryId(Long categoryId);
     List<LessonDTO> getLessonsByTeacherId(Long teacherId);
     List<LessonDTO> getLessonsBySubcategoryId(Long subcategoryId);
+
+    // the list of the lesson of the course
+    @Transactional(readOnly = true)
+    List<LessonDTO> getLessonsByCourseId(Long courseId);
 }

@@ -13,6 +13,9 @@ import java.util.Optional;
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
+    @Query("SELECT t FROM Teacher t JOIN FETCH t.user u WHERE u.id = :id")
+    Optional<Teacher> findByUser(@Param("id") Long id);
+
 
     @Modifying
     @Query("UPDATE Teacher t SET t.approved = true WHERE t.id = :id")

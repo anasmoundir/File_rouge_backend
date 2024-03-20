@@ -118,4 +118,14 @@ public class LessonController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching lessons for subcategory ID " + subcategoryId + ": " + e.getMessage());
         }
     }
+
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<?> getLessonsByCourseId(@PathVariable Long courseId) {
+        try {
+            List<LessonDTO> lessons = lessonService.getLessonsByCourseId(courseId);
+            return ResponseEntity.ok(lessons);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching lessons for course ID " + courseId + ": " + e.getMessage());
+        }
+    }
 }

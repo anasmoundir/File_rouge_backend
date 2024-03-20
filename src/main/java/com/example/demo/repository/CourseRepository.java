@@ -40,4 +40,6 @@ public interface CourseRepository extends JpaRepository<Course, Long>{
 
     @Query(value = "SELECT * FROM course WHERE subcategory_id IN (SELECT id FROM subcategory WHERE category_id = :categoryId)", nativeQuery = true)
     List<Course> findBySubcategory_CategoryId(Long categoryId);
+
+
 }

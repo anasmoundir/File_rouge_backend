@@ -1,9 +1,13 @@
 package com.example.demo.service.serviceImplementation;
 
+import com.example.demo.model.Course;
+import com.example.demo.model.Lesson;
 import com.example.demo.model.Resources;
 import com.example.demo.Mapper.ResourceMapper;
 import com.example.demo.dto.ResourcesDTO;
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.CourseRepository;
+import com.example.demo.repository.LessonRepository;
 import com.example.demo.repository.ResourceRepository;
 import com.example.demo.service.interfaces.ResourceService;
 import org.springframework.stereotype.Service;
@@ -12,15 +16,28 @@ import org.springframework.stereotype.Service;
 public class ResourceServiceImpl implements ResourceService {
     private final ResourceRepository resourceRepository;
     private final ResourceMapper resourceMapper;
+    private final LessonRepository lessonRepository;
+    private  final CourseRepository courseRepository;
 
-    public ResourceServiceImpl(ResourceRepository resourceRepository, ResourceMapper resourceMapper) {
+    public ResourceServiceImpl(ResourceRepository resourceRepository, ResourceMapper resourceMapper,
+                               LessonRepository lessonRepository, CourseRepository courseRepository) {
         this.resourceRepository = resourceRepository;
         this.resourceMapper = resourceMapper;
+        this.lessonRepository = lessonRepository;
+        this.courseRepository = courseRepository;
     }
 
     @Override
     public ResourcesDTO createResource(ResourcesDTO resourcesDTO) {
-        Resources resources =  resourceMapper.resourceDTOToResource(resourcesDTO);
+        long lessonId = resourcesDTO.getLessonId();
+        long courseId = resourcesDTO.getCourseId();
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new ResourceNotFoundException("Lesson not found with id: " + lessonId));
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + courseId));
+        Resources resources = resourceMapper.resourceDTOToResource(resourcesDTO);
+        resources.setLesson(lesson);
+        resources.setCourse(course);
         resources = resourceRepository.save(resources);
         return resourceMapper.resourceToResourceDTO(resources);
     }

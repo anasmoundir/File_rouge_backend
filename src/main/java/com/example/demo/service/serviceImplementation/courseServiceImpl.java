@@ -7,6 +7,8 @@ import com.example.demo.exception.*;
 import com.example.demo.model.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.interfaces.CourseService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -120,6 +122,27 @@ public class courseServiceImpl  implements CourseService {
                 .map(courseMapper::courseToCourseDTO)
                 .collect(Collectors.toList());
     }
+    @Override
+    @Transactional(readOnly = true)
+    public List<CourseDTO> getCoursesOfTheCurrentTeacher() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        User user = userRepository.findByUsername(username);
+
+        Teacher teacher = teacherRepository.findByUser(user.getUserId())
+                .orElseThrow(() -> new TeacherNotFoundException("Teacher not found for user with username: " + username));
+
+        List<Course> courses = courseRepository.findByInstructor_Id(teacher.getId());
+
+        System.out.println("the number of the course :" + courses.size());
+
+        return courses.stream()
+                .map(courseMapper::courseToCourseDTO)
+                .collect(Collectors.toList());
+    }
 
     @Override
     @Transactional
@@ -184,6 +207,4 @@ public class courseServiceImpl  implements CourseService {
                 .map(courseMapper::courseToCourseDTO)
                 .collect(Collectors.toList());
     }
-
-
 }

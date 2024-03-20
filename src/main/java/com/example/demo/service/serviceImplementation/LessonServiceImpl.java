@@ -119,4 +119,14 @@ public class LessonServiceImpl implements LessonService {
                 .map(lessonMapper::lessonToLessonDTO)
                 .collect(Collectors.toList());
     }
+
+    // the list of the lesson of the course
+    @Override
+    @Transactional(readOnly = true)
+    public List<LessonDTO> getLessonsByCourseId(Long courseId) {
+        List<Lesson> lessons = lessonRepository.findLessonsByCourseId(courseId);
+        return lessons.stream()
+                .map(lessonMapper::lessonToLessonDTO)
+                .collect(Collectors.toList());
+    }
 }
