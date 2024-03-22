@@ -13,6 +13,7 @@
     import java.io.IOException;
     import java.io.OutputStream;
     import java.net.URLDecoder;
+    import java.util.List;
 
     @RestController
     @RequestMapping("api/resources")
@@ -49,6 +50,16 @@
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
         }
+
+
+
+        @GetMapping("/lesson/{lessonId}")
+        public ResponseEntity<List<ResourcesDTO>> getResourcesByLessonId(@PathVariable Long lessonId) {
+            List<ResourcesDTO> resourceDTOs = resourceService.getResourceDTOsByLessonId(lessonId);
+            return ResponseEntity.ok(resourceDTOs);
+        }
+
+
 
         @GetMapping("/stream")
         public void streamFile(@RequestParam("url") String url, HttpServletResponse response) {
@@ -101,27 +112,21 @@
 
 
 
-        @PostMapping("/upload")
+        @PostMapping(value = "/upload", consumes = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<ResourcesDTO> uploadResource(@RequestParam("file") MultipartFile file,
                                                            @RequestParam("title") String title,
                                                            @RequestParam("description") String description,
                                                            @RequestParam("courseId") Long courseId,
                                                            @RequestParam("lessonId") Long lessonId) {
             try {
-                String fileName = azureBlobStorageService.uploadFile(file);
-
-                ResourcesDTO resourcesDTO = new ResourcesDTO();
-                resourcesDTO.setTitle(title);
-                resourcesDTO.setDescription(description);
-                resourcesDTO.setUrl(fileName);
-                resourcesDTO.setCourseId(courseId);
-                resourcesDTO.setLessonId(lessonId);
-
-                ResourcesDTO savedResourcesDTO = resourceService.createResource(resourcesDTO);
+                ResourcesDTO savedResourcesDTO = resourceService.uploadResource(file, title, description, courseId, lessonId);
                 return ResponseEntity.status(HttpStatus.CREATED).body(savedResourcesDTO);
             } catch (IOException e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
         }
+
+
+
     }

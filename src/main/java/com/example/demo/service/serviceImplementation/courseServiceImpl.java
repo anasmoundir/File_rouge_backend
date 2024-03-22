@@ -58,11 +58,15 @@ public class courseServiceImpl  implements CourseService {
     @Transactional
     public CourseDTO createCourse(CourseDTO courseDTO) {
         Long subcategoryId = courseDTO.getSubcategoryId();
-        Long instructorId = courseDTO.getInstructorId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+        Teacher teacher = teacherRepository.findByUser(user.getUserId())
+                .orElseThrow(() -> new TeacherNotFoundException("Teacher not found for user with username: " + username));
 
         Course course = courseMapper.courseDTOToCourse(courseDTO);
         course.setSubcategoryId(subcategoryId);
-        course.setInstructorId(instructorId);
+        course.setInstructorId(teacher.getId());
 
         return courseMapper.courseToCourseDTO(courseRepository.save(course));
     }

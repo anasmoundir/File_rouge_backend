@@ -9,8 +9,14 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.LessonRepository;
 import com.example.demo.repository.ResourceRepository;
+import com.example.demo.service.interfaces.AzureBlobStorageService;
 import com.example.demo.service.interfaces.ResourceService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ResourceServiceImpl implements ResourceService {
@@ -18,13 +24,16 @@ public class ResourceServiceImpl implements ResourceService {
     private final ResourceMapper resourceMapper;
     private final LessonRepository lessonRepository;
     private  final CourseRepository courseRepository;
+    private final AzureBlobStorageService azureBlobStorageService;
 
-    public ResourceServiceImpl(ResourceRepository resourceRepository, ResourceMapper resourceMapper,
+
+    public ResourceServiceImpl(ResourceRepository resourceRepository, AzureBlobStorageService azureBlobStorageService , ResourceMapper resourceMapper,
                                LessonRepository lessonRepository, CourseRepository courseRepository) {
         this.resourceRepository = resourceRepository;
         this.resourceMapper = resourceMapper;
         this.lessonRepository = lessonRepository;
         this.courseRepository = courseRepository;
+        this.azureBlobStorageService = azureBlobStorageService;
     }
 
     @Override
@@ -40,6 +49,32 @@ public class ResourceServiceImpl implements ResourceService {
         resources.setCourse(course);
         resources = resourceRepository.save(resources);
         return resourceMapper.resourceToResourceDTO(resources);
+    }
+
+    @Override
+    public ResourcesDTO uploadResource(MultipartFile file, String title, String description, Long courseId, Long lessonId) throws IOException {
+        String fileName = azureBlobStorageService.uploadFile(file);
+
+        ResourcesDTO resourcesDTO = new ResourcesDTO();
+        resourcesDTO.setTitle(title);
+        resourcesDTO.setDescription(description);
+        resourcesDTO.setUrl(fileName);
+        resourcesDTO.setCourseId(courseId);
+        resourcesDTO.setLessonId(lessonId);
+
+        return createResource(resourcesDTO);
+    }
+
+
+    @Override
+    public List<ResourcesDTO> getResourceDTOsByLessonId(Long lessonId) {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new ResourceNotFoundException("Lesson not found with ID " + lessonId));
+        List<Resources> resources = resourceRepository.findByLesson(lesson);
+        List<ResourcesDTO> resourceDTOs = resources.stream()
+                .map(resourceMapper::resourceToResourceDTO)
+                .collect(Collectors.toList());
+        return resourceDTOs;
     }
 
     @Override
