@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -16,4 +17,5 @@ public class CourseDTO {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String imageUrl;
 }

@@ -4,7 +4,6 @@ import com.example.demo.Mapper.EnrollementMapper;
 import com.example.demo.dto.EnrollmentDTO;
 import com.example.demo.exception.CourseNotFoundException;
 import com.example.demo.exception.EnrollmentNotFoundException;
-import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.Course;
 import com.example.demo.model.Enrollment;
 import com.example.demo.model.User;
@@ -12,6 +11,8 @@ import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.EnrollmentRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.interfaces.EnrollmentService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,9 +34,13 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     @Transactional
-    public EnrollmentDTO enrollUser(Long userId, Long courseId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+    public EnrollmentDTO enrollUser(Long courseId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        User user = userRepository.findByUsername(username);
+
 
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new CourseNotFoundException("Course not found with id: " + courseId));

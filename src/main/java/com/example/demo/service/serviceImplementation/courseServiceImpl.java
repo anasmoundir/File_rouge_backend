@@ -9,12 +9,16 @@ import com.example.demo.exception.*;
 import com.example.demo.model.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.interfaces.CourseService;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +37,8 @@ public class courseServiceImpl  implements CourseService {
 
     private  final LessonMapper lessonMapper;
 
+    private  AzureBlobStorageService azureBlobStorageService;
+
     public courseServiceImpl(CourseRepository courseRepository,
                              CategoryRepository categoryRepository,
                              SubcategoryRepository subcategoryRepository,
@@ -41,7 +47,8 @@ public class courseServiceImpl  implements CourseService {
                              TeacherRepository teacherRepository,
                              TeacherMapper teacherMapper,
                              LessonMapper lessonMapper,
-                             ResourceMapper ressourceMapper) {
+                             ResourceMapper ressourceMapper,
+                             AzureBlobStorageService azureBlobStorageService) {
         this.courseRepository = courseRepository;
         this.ressourceMapper = ressourceMapper;
         this.lessonMapper = lessonMapper;
@@ -51,22 +58,44 @@ public class courseServiceImpl  implements CourseService {
         this.courseMapper = courseMapper;
         this.teacherRepository = teacherRepository;
         this.teacherMapper = teacherMapper;
+        this.azureBlobStorageService = azureBlobStorageService;
     }
 
 
     @Override
     @Transactional
-    public CourseDTO createCourse(CourseDTO courseDTO) {
-        Long subcategoryId = courseDTO.getSubcategoryId();
+    public CourseDTO createCourse(String title, Long subcategoryId, Long instructorId, String description, LocalDate startDate, LocalDate endDate, MultipartFile courseImage) throws FileUploadException {
+
+        String imageUrl;
+        try {
+            imageUrl = azureBlobStorageService.uploadFile(courseImage);
+        } catch (IOException e) {
+            throw new FileUploadException("Failed to upload image file: " + e.getMessage());
+        }
+
+        CourseDTO courseDTO = new CourseDTO();
+        courseDTO.setTitle(title);
+        courseDTO.setSubcategoryId(subcategoryId);
+        courseDTO.setInstructorId(instructorId);
+        courseDTO.setDescription(description);
+        courseDTO.setStartDate(startDate);
+        courseDTO.setEndDate(endDate);
+        courseDTO.setImageUrl(imageUrl);
+
+        CourseDTO savedCourse = savecourse(courseDTO);
+
+        return savedCourse;
+    }
+
+    private CourseDTO savecourse(CourseDTO courseDTO) {
+        Course course = courseMapper.courseDTOToCourse(courseDTO);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userRepository.findByUsername(username);
         Teacher teacher = teacherRepository.findByUser(user.getUserId())
                 .orElseThrow(() -> new TeacherNotFoundException("Teacher not found for user with username: " + username));
 
-        Course course = courseMapper.courseDTOToCourse(courseDTO);
-        course.setSubcategoryId(subcategoryId);
-        course.setInstructorId(teacher.getId());
+        course.setTeacher(teacher);
 
         return courseMapper.courseToCourseDTO(courseRepository.save(course));
     }

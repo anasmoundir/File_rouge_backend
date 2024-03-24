@@ -17,9 +17,9 @@ public class EnrollementController {
     }
 
     @PostMapping
-    public ResponseEntity<EnrollmentDTO> enrollUser(@RequestParam Long userId, @RequestParam Long courseId) {
+    public ResponseEntity<EnrollmentDTO> enrollUser(@RequestParam Long courseId) {
         try {
-            EnrollmentDTO enrollmentDTO = enrollmentService.enrollUser(userId, courseId);
+            EnrollmentDTO enrollmentDTO = enrollmentService.enrollUser(courseId);
             return ResponseEntity.status(HttpStatus.CREATED).body(enrollmentDTO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

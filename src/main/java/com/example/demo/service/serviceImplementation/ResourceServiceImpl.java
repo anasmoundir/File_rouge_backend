@@ -49,22 +49,9 @@ public class ResourceServiceImpl implements ResourceService {
         resources.setCourse(course);
         resources = resourceRepository.save(resources);
         return resourceMapper.resourceToResourceDTO(resources);
-    }
 
-    @Override
-    public ResourcesDTO uploadResource(MultipartFile file, String title, String description, Long courseId, Long lessonId) throws IOException {
-        String fileName = azureBlobStorageService.uploadFile(file);
 
-        ResourcesDTO resourcesDTO = new ResourcesDTO();
-        resourcesDTO.setTitle(title);
-        resourcesDTO.setDescription(description);
-        resourcesDTO.setUrl(fileName);
-        resourcesDTO.setCourseId(courseId);
-        resourcesDTO.setLessonId(lessonId);
-
-        return createResource(resourcesDTO);
-    }
-
+}
 
     @Override
     public List<ResourcesDTO> getResourceDTOsByLessonId(Long lessonId) {
@@ -75,6 +62,19 @@ public class ResourceServiceImpl implements ResourceService {
                 .map(resourceMapper::resourceToResourceDTO)
                 .collect(Collectors.toList());
         return resourceDTOs;
+    }
+    @Override
+    public ResourcesDTO uploadResourceFromFormData(MultipartFile file, String title, String description, Long courseId, Long lessonId) throws IOException {
+        String fileName = azureBlobStorageService.uploadFile(file);
+
+        ResourcesDTO resourcesDTO = new ResourcesDTO();
+        resourcesDTO.setTitle(title);
+        resourcesDTO.setDescription(description);
+        resourcesDTO.setUrl(fileName);
+        resourcesDTO.setCourseId(courseId);
+        resourcesDTO.setLessonId(lessonId);
+
+        return createResource(resourcesDTO);
     }
 
     @Override

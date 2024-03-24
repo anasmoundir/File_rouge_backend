@@ -2,10 +2,15 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.CourseDTO;
 import com.example.demo.service.interfaces.CourseService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -28,17 +33,23 @@ public class CourseController {
         }
     }
 
-    @PostMapping()
-    public ResponseEntity<?> createCourse(@RequestBody CourseDTO courseDTO) {
+
+    @PostMapping(value = "/courses")
+    public ResponseEntity<CourseDTO> createCourse(@RequestParam("title") String title,
+                                                  @RequestParam("subcategoryId") Long subcategoryId,
+                                                  @RequestParam("instructorId") Long instructorId,
+                                                  @RequestParam("description") String description,
+                                                  @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate startDate,
+                                                  @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate endDate,
+                                                  @RequestParam("courseImage") MultipartFile courseImage) {
         try {
-            CourseDTO createdCourse = courseService.createCourse(courseDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdCourse);
+            CourseDTO createdCourse = courseService.createCourse(title, subcategoryId, instructorId, description, startDate, endDate, courseImage);
+            return ResponseEntity.ok(createdCourse);
         } catch (Exception e) {
             String errorMessage = "Error creating course: " + e.getMessage();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<CourseDTO> getCourseById(@PathVariable Long id) {

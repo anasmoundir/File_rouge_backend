@@ -12,9 +12,11 @@ public interface ResourceService {
     ResourcesDTO createResource(ResourcesDTO resourcesDTO);
 
 
-    ResourcesDTO uploadResource(MultipartFile file, String title, String description, Long courseId, Long lessonId) throws IOException;
+//    ResourcesDTO uploadResource(MultipartFile file, String title, String description, Long courseId, Long lessonId) throws IOException;
 
     List<ResourcesDTO> getResourceDTOsByLessonId(Long lessonId);
+
+    ResourcesDTO uploadResourceFromFormData(MultipartFile file, String title, String description, Long courseId, Long lessonId) throws IOException;
 
     ResourcesDTO getResourceById(Long id);
     ResourcesDTO updateResource(Long id, ResourcesDTO resourcesDTO);

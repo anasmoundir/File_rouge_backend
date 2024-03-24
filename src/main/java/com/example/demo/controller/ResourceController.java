@@ -111,22 +111,19 @@
         }
 
 
-
-        @PostMapping(value = "/upload", consumes = MediaType.APPLICATION_JSON_VALUE)
+        @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
         public ResponseEntity<ResourcesDTO> uploadResource(@RequestParam("file") MultipartFile file,
                                                            @RequestParam("title") String title,
                                                            @RequestParam("description") String description,
                                                            @RequestParam("courseId") Long courseId,
                                                            @RequestParam("lessonId") Long lessonId) {
             try {
-                ResourcesDTO savedResourcesDTO = resourceService.uploadResource(file, title, description, courseId, lessonId);
+                ResourcesDTO savedResourcesDTO = resourceService.uploadResourceFromFormData(file, title, description, courseId, lessonId);
                 return ResponseEntity.status(HttpStatus.CREATED).body(savedResourcesDTO);
             } catch (IOException e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
         }
-
-
 
     }

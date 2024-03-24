@@ -1,15 +1,17 @@
 package com.example.demo.service.interfaces;
 
 import com.example.demo.dto.*;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface CourseService {
 
-
     @Transactional
-    CourseDTO createCourse(CourseDTO courseDTO);
+    CourseDTO createCourse(String title, Long subcategoryId, Long instructorId, String description, LocalDate startDate, LocalDate endDate, MultipartFile courseImage) throws FileUploadException;
 
     @Transactional(readOnly = true)
     CourseDTO getCourseById(Long id);
@@ -23,11 +25,8 @@ public interface CourseService {
     @Transactional(readOnly = true)
     List<CourseDTO> getAllCourses();
 
-
-
     @Transactional(readOnly = true)
     List<CourseDTO> getCoursesBySubcategory(Long subcategoryId);
-
 
     @Transactional(readOnly = true)
     List<CourseDTO> getCoursesByInstructor(Long instructorId);
