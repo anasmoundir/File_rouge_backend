@@ -257,8 +257,12 @@ public class courseServiceImpl  implements CourseService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CourseDTO> getEnrolledCoursesByUserId(Long userId) {
-        List<Long> enrolledCourseIds = enrollmentRepository.findCourseIdsByUserId(userId);
+    public List<CourseDTO> getEnrolledCoursesByUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+
+        List<Long> enrolledCourseIds = enrollmentRepository.findCourseIdsByUserId(user.getUserId());
         List<Course> enrolledCourses = courseRepository.findByIdIn(enrolledCourseIds);
         return enrolledCourses.stream()
                 .map(courseMapper::courseToCourseDTO)

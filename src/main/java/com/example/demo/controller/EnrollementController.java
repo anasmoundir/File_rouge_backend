@@ -44,10 +44,10 @@ public class EnrollementController {
         }
     }
 
-    @GetMapping("/user/{userId}/courses")
-    public ResponseEntity<List<CourseDTO>> getEnrolledCoursesByUserId(@PathVariable Long userId) {
+    @GetMapping("/user/courses")
+    public ResponseEntity<List<CourseDTO>> getEnrolledCoursesByUserId() {
         try {
-            List<CourseDTO> enrolledCourses = courseService.getEnrolledCoursesByUserId(userId);
+            List<CourseDTO> enrolledCourses = courseService.getEnrolledCoursesByUserId();
             return ResponseEntity.ok(enrolledCourses);
         } catch (UserNotFoundException ex) {
             return ResponseEntity.notFound().build();
