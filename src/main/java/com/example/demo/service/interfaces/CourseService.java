@@ -41,4 +41,7 @@ public interface CourseService {
     CourseDTO addResourcesToLesson(Long courseId, Long lessonId, List<ResourcesDTO> resourceDTOs);
 
     List<CourseDTO> searchCourses(String title, Long categoryId, Long instructorId);
+
+    @Transactional(readOnly = true)
+    List<CourseDTO> getEnrolledCoursesByUserId(Long userId);
 }

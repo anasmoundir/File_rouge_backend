@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @Entity
@@ -23,5 +24,5 @@ public class Enrollment {
     private Course course;
 
     @Column(name = "enrollment_date", nullable = false)
-    private LocalDate enrollmentDate;
+    private Date enrollmentDate;
 }

@@ -39,6 +39,8 @@ public class courseServiceImpl  implements CourseService {
 
     private  AzureBlobStorageService azureBlobStorageService;
 
+    private final EnrollmentRepository enrollmentRepository;
+
     public courseServiceImpl(CourseRepository courseRepository,
                              CategoryRepository categoryRepository,
                              SubcategoryRepository subcategoryRepository,
@@ -48,7 +50,8 @@ public class courseServiceImpl  implements CourseService {
                              TeacherMapper teacherMapper,
                              LessonMapper lessonMapper,
                              ResourceMapper ressourceMapper,
-                             AzureBlobStorageService azureBlobStorageService) {
+                             AzureBlobStorageService azureBlobStorageService,
+                             EnrollmentRepository enrollmentRepository) {
         this.courseRepository = courseRepository;
         this.ressourceMapper = ressourceMapper;
         this.lessonMapper = lessonMapper;
@@ -59,6 +62,7 @@ public class courseServiceImpl  implements CourseService {
         this.teacherRepository = teacherRepository;
         this.teacherMapper = teacherMapper;
         this.azureBlobStorageService = azureBlobStorageService;
+        this.enrollmentRepository = enrollmentRepository;
     }
 
 
@@ -250,4 +254,15 @@ public class courseServiceImpl  implements CourseService {
                 .map(courseMapper::courseToCourseDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CourseDTO> getEnrolledCoursesByUserId(Long userId) {
+        List<Long> enrolledCourseIds = enrollmentRepository.findCourseIdsByUserId(userId);
+        List<Course> enrolledCourses = courseRepository.findByIdIn(enrolledCourseIds);
+        return enrolledCourses.stream()
+                .map(courseMapper::courseToCourseDTO)
+                .collect(Collectors.toList());
+    }
+
 }

@@ -6,6 +6,7 @@ import com.example.demo.model.Subcategory;
 import com.example.demo.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -42,4 +43,6 @@ public interface CourseRepository extends JpaRepository<Course, Long>{
     List<Course> findBySubcategory_CategoryId(Long categoryId);
 
 
+    @Query(value = "SELECT * FROM course WHERE course_id IN :enrolledCourseIds", nativeQuery = true)
+    List<Course> findByIdIn(@Param("enrolledCourseIds") List<Long> enrolledCourseIds);
 }

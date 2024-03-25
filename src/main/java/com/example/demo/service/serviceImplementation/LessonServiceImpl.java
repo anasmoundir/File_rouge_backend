@@ -120,7 +120,6 @@ public class LessonServiceImpl implements LessonService {
                 .collect(Collectors.toList());
     }
 
-    // the list of the lesson of the course
     @Override
     @Transactional(readOnly = true)
     public List<LessonDTO> getLessonsByCourseId(Long courseId) {

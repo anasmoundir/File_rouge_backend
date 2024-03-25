@@ -16,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Service
 public class EnrollmentServiceImpl implements EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
@@ -46,12 +48,14 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .orElseThrow(() -> new CourseNotFoundException("Course not found with id: " + courseId));
 
         Enrollment enrollment = new Enrollment();
+        enrollment.setEnrollmentDate(new Date());
         enrollment.setUser(user);
         enrollment.setCourse(course);
         enrollment = enrollmentRepository.save(enrollment);
 
         return enrollmentMapper.enrollmentToEnrollmentDTO(enrollment);
     }
+
 
     @Override
     @Transactional
@@ -60,4 +64,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .orElseThrow(() -> new EnrollmentNotFoundException("Enrollment not found with id: " + enrollmentId));
         enrollmentRepository.delete(enrollment);
     }
+
+
+
+
 }
