@@ -7,6 +7,7 @@ import com.example.demo.service.interfaces.EnrollmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class EnrollementController {
         this.courseService = courseService;
     }
 
+    @PreAuthorize("hasAuthority('STUDENT')")
     @PostMapping
     public ResponseEntity<EnrollmentDTO> enrollUser(@RequestBody EnrollmentDTO enrollmentDTO) {
         try {
@@ -33,6 +35,7 @@ public class EnrollementController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    @PreAuthorize("hasAuthority('STUDENT')")
     @DeleteMapping("/{enrollmentId}")
     public ResponseEntity<Void> cancelEnrollment(@PathVariable Long enrollmentId)
     {
@@ -44,6 +47,8 @@ public class EnrollementController {
         }
     }
 
+
+    @PreAuthorize("hasAuthority('STUDENT')")
     @GetMapping("/user/courses")
     public ResponseEntity<List<CourseDTO>> getEnrolledCoursesByUserId() {
         try {

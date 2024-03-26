@@ -56,7 +56,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         return enrollmentMapper.enrollmentToEnrollmentDTO(enrollment);
     }
 
-
     @Override
     @Transactional
     public void cancelEnrollment(Long enrollmentId) {
@@ -64,8 +63,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .orElseThrow(() -> new EnrollmentNotFoundException("Enrollment not found with id: " + enrollmentId));
         enrollmentRepository.delete(enrollment);
     }
-
-
 
 
 }

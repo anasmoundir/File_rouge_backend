@@ -8,6 +8,7 @@
     import org.springframework.http.HttpStatus;
     import org.springframework.http.MediaType;
     import org.springframework.http.ResponseEntity;
+    import org.springframework.security.access.prepost.PreAuthorize;
     import org.springframework.web.bind.annotation.*;
     import org.springframework.web.multipart.MultipartFile;
     import java.io.IOException;
@@ -27,6 +28,7 @@
             this.azureBlobStorageService = azureBlobStorageService;
         }
 
+        @PreAuthorize("hasAuthority('TEACHER')")
         @PostMapping
         public ResponseEntity<ResourcesDTO> createResource(@RequestBody ResourcesDTO resourcesDTO) {
             try {
@@ -36,6 +38,7 @@
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
         }
+
 
         @GetMapping("/{id}")
         public ResponseEntity<ResourcesDTO> getResourceById(@PathVariable Long id) {
@@ -100,6 +103,7 @@
             }
         }
 
+        @PreAuthorize("hasAuthority('TEACHER')")
         @DeleteMapping("/{id}")
         public ResponseEntity<Void> deleteResource(@PathVariable Long id) {
             try {
@@ -111,6 +115,7 @@
         }
 
 
+        @PreAuthorize("hasAuthority('TEACHER')")
         @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
         public ResponseEntity<ResourcesDTO> uploadResource(@RequestParam("file") MultipartFile file,
                                                            @RequestParam("title") String title,

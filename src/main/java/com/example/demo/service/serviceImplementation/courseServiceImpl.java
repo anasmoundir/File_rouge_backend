@@ -10,6 +10,7 @@ import com.example.demo.model.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.interfaces.CourseService;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class courseServiceImpl  implements CourseService {
+    @Autowired
+    private  AzureBlobStorageService azureBlobStorageService;
+    private final AuthenticationFacade authenticationFacade;
     private final CourseRepository courseRepository;
     private final CategoryRepository categoryRepository;
     private final SubcategoryRepository subcategoryRepository;
@@ -37,7 +41,7 @@ public class courseServiceImpl  implements CourseService {
 
     private  final LessonMapper lessonMapper;
 
-    private  AzureBlobStorageService azureBlobStorageService;
+
 
     private final EnrollmentRepository enrollmentRepository;
 
@@ -50,9 +54,10 @@ public class courseServiceImpl  implements CourseService {
                              TeacherMapper teacherMapper,
                              LessonMapper lessonMapper,
                              ResourceMapper ressourceMapper,
-                             AzureBlobStorageService azureBlobStorageService,
-                             EnrollmentRepository enrollmentRepository) {
+                             EnrollmentRepository enrollmentRepository,
+                             AuthenticationFacade authenticationFacade) {
         this.courseRepository = courseRepository;
+        this.authenticationFacade = authenticationFacade;
         this.ressourceMapper = ressourceMapper;
         this.lessonMapper = lessonMapper;
         this.categoryRepository = categoryRepository;
@@ -61,7 +66,6 @@ public class courseServiceImpl  implements CourseService {
         this.courseMapper = courseMapper;
         this.teacherRepository = teacherRepository;
         this.teacherMapper = teacherMapper;
-        this.azureBlobStorageService = azureBlobStorageService;
         this.enrollmentRepository = enrollmentRepository;
     }
 
@@ -93,7 +97,7 @@ public class courseServiceImpl  implements CourseService {
 
     private CourseDTO savecourse(CourseDTO courseDTO) {
         Course course = courseMapper.courseDTOToCourse(courseDTO);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = authenticationFacade.getAuthentication();
         String username = authentication.getName();
         User user = userRepository.findByUsername(username);
         Teacher teacher = teacherRepository.findByUser(user.getUserId())
@@ -172,13 +176,9 @@ public class courseServiceImpl  implements CourseService {
     @Override
     @Transactional(readOnly = true)
     public List<CourseDTO> getCoursesOfTheCurrentTeacher() {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         String username = authentication.getName();
-
         User user = userRepository.findByUsername(username);
-
         Teacher teacher = teacherRepository.findByUser(user.getUserId())
                 .orElseThrow(() -> new TeacherNotFoundException("Teacher not found for user with username: " + username));
 

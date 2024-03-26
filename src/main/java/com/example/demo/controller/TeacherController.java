@@ -10,6 +10,7 @@ import com.example.demo.service.interfaces.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class TeacherController {
         this.teacherMapper = teacherMapper;
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public ResponseEntity<List<TeacherDTO>> getAllTeachers() {
         List<TeacherDTO> teacherDTOs = teacherService.getAllTeachers().stream().map(teacherMapper::teacherToTeacherDTO)
@@ -36,6 +38,7 @@ public class TeacherController {
         return ResponseEntity.ok(teacherDTOs);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{teacherId}/approve")
     public ResponseEntity<TeacherDTO> approveTeacher(@PathVariable Long teacherId) {
         TeacherDTO approvedTeacher = teacherService.approveTeacher(teacherId);

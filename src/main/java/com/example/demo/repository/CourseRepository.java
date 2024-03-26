@@ -21,7 +21,7 @@ public interface CourseRepository extends JpaRepository<Course, Long>{
     @Query(value = "SELECT * FROM course WHERE subcategory_id = :subcategoryId", nativeQuery = true)
     List<Course> findBySubcategory(Long subcategoryId);
 
-    @Query(value = "SELECT * FROM course WHERE instructor_id = :instructorId", nativeQuery = true)
+    @Query(value = "SELECT * FROM course WHERE teacher_id = :instructorId", nativeQuery = true)
     List<Course> findByInstructor_Id(Long instructorId);
 
     @Query(value = "SELECT * FROM course WHERE title LIKE %:title% AND subcategory_id IN (SELECT id FROM subcategory WHERE category_id = :categoryId) AND instructor_id = :instructorId", nativeQuery = true)

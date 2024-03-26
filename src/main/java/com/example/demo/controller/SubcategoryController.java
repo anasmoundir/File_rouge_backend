@@ -6,6 +6,7 @@ import com.example.demo.service.interfaces.SubcategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class SubcategoryController {
         this.subcategoryService = subcategoryService;
     }
 
+
     @GetMapping
     public ResponseEntity<List<SubcategoryDTO>> getAllSubcategories() {
         List<SubcategoryDTO> subcategories = subcategoryService.getAllSubcategories();
@@ -31,18 +33,21 @@ public class SubcategoryController {
         return ResponseEntity.ok(subcategory);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<SubcategoryDTO> createSubcategory(@RequestBody SubcategoryDTO subcategoryDTO) {
         SubcategoryDTO createdSubcategory = subcategoryService.createSubcategory(subcategoryDTO);
         return new ResponseEntity<>(createdSubcategory, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<SubcategoryDTO> updateSubcategory(@PathVariable Long id, @RequestBody SubcategoryDTO subcategoryDTO) {
         SubcategoryDTO updatedSubcategory = subcategoryService.updateSubcategory(id, subcategoryDTO);
         return ResponseEntity.ok(updatedSubcategory);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSubcategory(@PathVariable Long id) {
         subcategoryService.deleteSubcategory(id);

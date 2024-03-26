@@ -5,6 +5,7 @@ import com.example.demo.exception.CategoryNotFoundException;
 import com.example.demo.service.interfaces.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,16 +14,16 @@ import java.util.List;
 @RequestMapping("api/category")
 public class CategoryController {
     private final CategoryService categoryService;
-
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
         CategoryDTO createdCategory = categoryService.createCategory(categoryDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
@@ -34,6 +35,7 @@ public class CategoryController {
         }
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id,
                                                       @RequestBody CategoryDTO categoryDTO) {
@@ -45,6 +47,7 @@ public class CategoryController {
         }
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         try {
@@ -54,6 +57,7 @@ public class CategoryController {
             return ResponseEntity.notFound().build();
     }
     }
+
 
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {

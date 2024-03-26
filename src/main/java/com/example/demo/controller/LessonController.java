@@ -7,6 +7,7 @@ import com.example.demo.service.interfaces.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class LessonController {
     }
 
 
+    @PreAuthorize("hasAuthority('TEACHER')")
     @PostMapping("/{courseId}/lessons")
     public ResponseEntity<?> AddLessonTocourse(@PathVariable Long courseId, @RequestBody LessonDTO lessonDTO) {
         try {
@@ -49,6 +51,8 @@ public class LessonController {
         }
     }
 
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','TEACHER')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateLesson(@PathVariable Long id, @RequestBody LessonDTO lessonDTO) {
         try {
@@ -59,6 +63,7 @@ public class LessonController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','TEACHER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteLesson(@PathVariable Long id) {
         try {
@@ -99,6 +104,7 @@ public class LessonController {
         }
     }
 
+
     @GetMapping("/teacher/{teacherId}")
     public ResponseEntity<?> getLessonsByTeacherId(@PathVariable Long teacherId) {
         try {
@@ -118,6 +124,8 @@ public class LessonController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching lessons for subcategory ID " + subcategoryId + ": " + e.getMessage());
         }
     }
+
+
 
     @GetMapping("/course/{courseId}")
     public ResponseEntity<?> getLessonsByCourseId(@PathVariable Long courseId) {

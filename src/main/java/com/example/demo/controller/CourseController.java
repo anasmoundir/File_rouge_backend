@@ -6,11 +6,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -22,7 +22,9 @@ public class CourseController {
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
     }
-        @GetMapping("/instructor")
+
+    @PreAuthorize("hasAuthority('TEACHER')")
+    @GetMapping("/instructor")
     public ResponseEntity<List<CourseDTO>> getCoursesOfTheCurrentTeacher()
     {
         try {
@@ -34,6 +36,7 @@ public class CourseController {
     }
 
 
+    @PreAuthorize("hasAuthority('TEACHER')")
     @PostMapping(value = "/courses")
     public ResponseEntity<CourseDTO> createCourse(@RequestParam("title") String title,
                                                   @RequestParam("subcategoryId") Long subcategoryId,
@@ -62,6 +65,7 @@ public class CourseController {
     }
 
 
+    @PreAuthorize("hasAuthority('TEACHER')")
     @PutMapping("/{id}")
     public ResponseEntity<CourseDTO> updateCourse(@PathVariable Long id,
                                                   @RequestBody CourseDTO courseDTO) {
@@ -73,6 +77,8 @@ public class CourseController {
         }
     }
 
+
+    @PreAuthorize("hasAuthority('TEACHER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         try {
@@ -82,6 +88,7 @@ public class CourseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     @GetMapping
     public ResponseEntity<List<CourseDTO>> getAllCourses() {

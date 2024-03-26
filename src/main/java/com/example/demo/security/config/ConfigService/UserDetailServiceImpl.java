@@ -31,7 +31,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     private UserDetails buildUserDetails(User user) {
         String roleName = user.getUserRole().getRoleName();
-        GrantedAuthority authority = new SimpleGrantedAuthority(roleName);
+        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_"+roleName.toUpperCase());
         Collection<GrantedAuthority> authorities = Collections.singletonList(authority);
         return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
                 .password(user.getPassword())

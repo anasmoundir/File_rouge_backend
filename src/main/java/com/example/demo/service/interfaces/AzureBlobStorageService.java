@@ -11,7 +11,9 @@ public interface AzureBlobStorageService {
 
     String uploadFile(MultipartFile file) throws IOException;
 
-    byte[] downloadFile(String blobName) throws IOException;
+//    byte[] downloadFile(String blobName) throws IOException;
+
+    void downloadFile(String blobName, OutputStream outputStream) throws IOException;
 
     void deleteFile(String blobName);
 
