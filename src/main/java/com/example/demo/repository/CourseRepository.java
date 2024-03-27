@@ -45,4 +45,10 @@ public interface CourseRepository extends JpaRepository<Course, Long>{
 
     @Query(value = "SELECT * FROM course WHERE course_id IN :enrolledCourseIds", nativeQuery = true)
     List<Course> findByIdIn(@Param("enrolledCourseIds") List<Long> enrolledCourseIds);
+
+
+    List<Course> findAllByTeacher_User_UsernameLikeIgnoreCase(String s);
+
+
+    List<Course> findByTitleLikeIgnoreCase(String s);
 }

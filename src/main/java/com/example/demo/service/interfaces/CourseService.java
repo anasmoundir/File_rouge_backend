@@ -1,6 +1,7 @@
 package com.example.demo.service.interfaces;
 
 import com.example.demo.dto.*;
+import com.example.demo.model.Course;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,9 +41,10 @@ public interface CourseService {
     @Transactional
     CourseDTO addResourcesToLesson(Long courseId, Long lessonId, List<ResourcesDTO> resourceDTOs);
 
-    List<CourseDTO> searchCourses(String title, Long categoryId, Long instructorId);
-
 
     @Transactional(readOnly = true)
     List<CourseDTO> getEnrolledCoursesByUserId();
+
+
+    List<CourseDTO> searchCoursesByTitleOrInstructorName(String searchTerm);
 }

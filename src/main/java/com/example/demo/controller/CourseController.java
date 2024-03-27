@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.CourseDTO;
+import com.example.demo.model.Course;
 import com.example.demo.service.interfaces.CourseService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -99,15 +100,14 @@ public class CourseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
     @GetMapping("/search")
-    public ResponseEntity<List<CourseDTO>> searchCourses(@RequestParam(required = false) String title,
-                                                         @RequestParam(required = false) Long categoryId,
-                                                         @RequestParam(required = false) Long instructorId) {
+    public ResponseEntity<List<CourseDTO>> searchCoursesByTitleOrInstructorName(@RequestParam String searchTerm) {
         try {
-            List<CourseDTO> courses = courseService.searchCourses(title, categoryId, instructorId);
+            List<CourseDTO> courses = courseService.searchCoursesByTitleOrInstructorName(searchTerm);
             return ResponseEntity.ok(courses);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }

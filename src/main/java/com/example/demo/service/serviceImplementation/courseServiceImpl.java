@@ -231,29 +231,7 @@ public class courseServiceImpl  implements CourseService {
     }
 
 
-    @Override
-    public List<CourseDTO> searchCourses(String title, Long categoryId, Long instructorId) {
-        List<Course> courses;
 
-        if (title != null && categoryId != null && instructorId != null) {
-            courses = courseRepository.findByTitleContainingAndSubcategory_CategoryIdAndInstructor_Id(title, categoryId, instructorId);
-        } else if (title != null && categoryId != null) {
-            courses = courseRepository.findByTitleContainingAndSubcategory_Id(title, categoryId);
-        } else if (title != null && instructorId != null) {
-            courses = courseRepository.findByTitleContainingAndInstructor_Id(title, instructorId);
-        } else if (categoryId != null && instructorId != null) {
-            courses = courseRepository.findByInstructor_Id(instructorId);
-        } else if (title != null) {
-            courses = courseRepository.findByTitleContaining(title);
-        } else if (categoryId != null) {
-            courses = courseRepository.findBySubcategory_CategoryId(categoryId);
-        } else {
-            courses = courseRepository.findAll();
-        }
-        return courses.stream()
-                .map(courseMapper::courseToCourseDTO)
-                .collect(Collectors.toList());
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -267,6 +245,26 @@ public class courseServiceImpl  implements CourseService {
         return enrolledCourses.stream()
                 .map(courseMapper::courseToCourseDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CourseDTO> searchCoursesByTitleOrInstructorName(String searchTerm) {
+        try {
+            List<Course> coursesByTitle = courseRepository.findByTitleContaining(searchTerm);
+            List<Course> coursesByInstructor = courseRepository.findAllByTeacher_User_UsernameLikeIgnoreCase(searchTerm);
+
+            List<CourseDTO> courseDTOs = coursesByTitle.stream()
+                    .map(courseMapper::courseToCourseDTO)
+                    .collect(Collectors.toList());
+
+            courseDTOs.addAll(coursesByInstructor.stream()
+                    .map(courseMapper::courseToCourseDTO)
+                    .collect(Collectors.toList()));
+
+            return courseDTOs;
+        } catch (Exception e) {
+            throw new RuntimeException("Error occurred while searching for courses by title or instructor name", e);
+        }
     }
 
 }
