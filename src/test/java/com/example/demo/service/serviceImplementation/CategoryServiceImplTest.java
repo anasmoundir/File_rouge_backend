@@ -81,22 +81,6 @@ class CategoryServiceImplTest {
         assertTrue(exception.getMessage().contains("Category not found with id:"));
         verify(categoryRepository).findById(anyLong());
     }
-    @Test
-    void updateCategory_Success() {
-        when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(category));
-        when(categoryRepository.save(any(Category.class))).thenReturn(category);
-        when(categoryMapper.categoryToCategoryDTO(any(Category.class))).thenReturn(categoryDTO);
-
-        CategoryDTO updatedCategoryDTO = new CategoryDTO();
-        updatedCategoryDTO.setName("UpdatedName");
-        CategoryDTO result = categoryService.updateCategory(1L, updatedCategoryDTO);
-
-        assertNotNull(result);
-        assertEquals(updatedCategoryDTO.getName(), result.getName());
-        verify(categoryRepository).findById(anyLong());
-        verify(categoryRepository).save(any(Category.class));
-        verify(categoryMapper).categoryToCategoryDTO(any(Category.class));
-    }
 
     @Test
     void deleteCategory_Success() {

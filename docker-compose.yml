@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  java-app:
+#    build: ./java-app
+    image: filerougebackend:latest
+    ports:
+      - "8888:8888"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/BackendFileRouge?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: your_mysql_password
+      SECRET_KEY: f7b5c19f433459acc6816901e4457b05c6186110a481d5b1a838aed92650946b
+
+  # Existing Node.js application service (unchanged)
+  node-app:
+#    build: C:\A2Projects\File_rouge_frontend\src\app
+    image: filerougefront:latest
+    ports:
+      - "4200:4200"
+    command: [ "npm", "start" ]
+
+  # New MySQL service
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: your_strong_mysql_root_password
+      MYSQL_DATABASE: BackendFileRouge
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:  # Volume name
