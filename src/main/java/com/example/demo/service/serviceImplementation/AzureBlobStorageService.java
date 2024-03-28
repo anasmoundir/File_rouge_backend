@@ -28,18 +28,12 @@
             return generateBlobUrl(fileName);
         }
 
-//        @Override
-//        public byte[] downloadFile(String blobName) throws IOException {
-//            BlobClient blobClient = blobServiceClient.getBlobContainerClient(containerName).getBlobClient(blobName);
-//            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//            blobClient.download(outputStream);
-//            return outputStream.toByteArray();
-//        }
+
 
         @Override
         public void downloadFile(String blobName, OutputStream outputStream) throws IOException {
             BlobClient blobClient = blobServiceClient.getBlobContainerClient(containerName).getBlobClient(blobName);
-            blobClient.download(outputStream); // This writes the content to the provided outputStream
+            blobClient.download(outputStream);
         }
         @Override
         public void deleteFile(String blobName) {

@@ -58,7 +58,7 @@ class AzureBlobStorageServiceTest {
         doAnswer(invocation -> {
             ByteArrayOutputStream outputStream = invocation.getArgument(0);
             outputStream.write("Hello, world!".getBytes());
-            return null; // Return null for void methods
+            return null;
         }).when(blobClient).download(any(ByteArrayOutputStream.class));
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

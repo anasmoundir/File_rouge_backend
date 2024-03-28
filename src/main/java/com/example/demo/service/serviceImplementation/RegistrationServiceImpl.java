@@ -38,30 +38,16 @@
 
         }
 
-
-//        @Override
-//        @Transactional
-//        public void register(UserTeacherRequest request) {
-//            SignUpDTO signUpDTO = request.getUser();
-//            TeacherDTO teacherDTO = request.getTeacher();
-//            UserRole userRole = determineUserRole(teacherDTO);
-//            Long userId = registerUser(signUpDTO, userRole);
-//
-//            if (teacherDTO != null) {
-//                registerTeacher(teacherDTO, userId);
-//            }
-//        }
-
         @Override
         public User registerUser(SignUpDTO signUpDTO, UserRole userRole) {
             if (userRepository.existsByUsername(signUpDTO.getUsername())) {
                 throw new RuntimeException("Username already exists");
             }
-
             User user = new User();
             user.setUsername(signUpDTO.getUsername());
             user.setEmail(signUpDTO.getEmail());
             user.setUserRole(userRole);
+            user.setEnabled(true);
             user.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));
             User savedUser = userRepository.save(user);
             return savedUser;
